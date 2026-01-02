@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pixie-examples"
+packages = [
+    { include = "examples" }
+]
+
+version = "0.1.0"
+description = "examples for using Pixie"
+authors = ["Yiou Li <yol@gopixie.ai>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+pydantic-ai = "^1.39.0"
+pixie-sdk = {path = "../pixie-sdk-py", develop = true}
