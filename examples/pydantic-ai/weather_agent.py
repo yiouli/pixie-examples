@@ -58,8 +58,8 @@ async def get_weather(_ctx: RunContext[None], location: str) -> WeatherResult:
     )
 
 
-@pixie_app(name="weather")
-async def weather_agent_app(query: str) -> str:
+@pixie_app
+async def weather(query: str) -> str:
     """Run the weather agent with the given query and return a string summary."""
     Agent.instrument_all()
     result = await weather_agent.run(query)

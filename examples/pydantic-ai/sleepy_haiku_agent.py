@@ -8,7 +8,7 @@ The agent flows forever:
 
 Run the server (`pixie`) and subscribe via GraphiQL:
 subscription {
-  run(name: "sleepy_haiku_agent", inputData: "rain" ) {
+  run(name: "sleep_haiku", inputData: "rain" ) {
     runId
     status
     data
@@ -37,10 +37,9 @@ mutation {
 
 import asyncio
 import logging
-from typing import AsyncGenerator
 from pydantic_ai import Agent, RunContext
 
-from pixie import pixie_app
+from pixie import pixie_app, PixieGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +61,8 @@ async def sleep_for_a_bit(_ctx: RunContext[None]) -> str:
     return "Slept for 5 seconds."
 
 
-@pixie_app(name="sleepy_haiku_agent")
-async def run_haiku_cycle(topic: str) -> AsyncGenerator[str, None]:
+@pixie_app
+async def sleepy_haiku(topic: str) -> PixieGenerator[str, None]:
     """Run one sleep + haiku cycle through the agent."""
     Agent.instrument_all()
 
@@ -72,6 +71,5 @@ async def run_haiku_cycle(topic: str) -> AsyncGenerator[str, None]:
     yield f"Starting haiku cycles on topic: {topic}, repeating {iteration} times."
 
     for i in range(1, 10):
-        yield f"--- Cycle {i} ---"
         result = await haiku_agent.run(topic)
-        yield result.output
+        yield f"--- Haiku #{i} ---\n{result.output}\nNow let me sleep a bit..."
