@@ -11,7 +11,7 @@ chatbot = Agent(
 
 
 @pixie_app
-async def chat_with_ai(_: NoneType) -> PixieGenerator[str, str]:
+async def chat(_: NoneType) -> PixieGenerator[str, str]:
     Agent.instrument_all()
 
     welcome = "Hello! How can I assist you today?"
