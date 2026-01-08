@@ -14,3 +14,4 @@ readme = "README.md"
 python = ">=3.10,<4.0"
 pydantic-ai = "^1.39.0"
 pixie-sdk = {path = "../pixie-sdk-py", develop = true}
+openai-agents = "^0.6.5"
