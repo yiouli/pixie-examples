@@ -11,7 +11,8 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.10,<3.14"
 pydantic-ai = "^1.39.0"
 pixie-sdk = {path = "../pixie-sdk-py", develop = true}
 openai-agents = "^0.6.5"
+pymarkdownlnt = "^0.9.34"

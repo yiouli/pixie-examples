@@ -8,7 +8,7 @@ OpenAI Agents SDK,LLM-as-a-judge,,https://github.com/openai/openai-agents-python
 OpenAI Agents SDK,Customer Service (Multi-Agent & Multi-Turn),,https://github.com/openai/openai-agents-python/blob/main/examples/customer_service/main.py
 OpenAI Agents SDK,Routing/Handoffs (Graph/State-Machine),,https://github.com/openai/openai-agents-python/blob/main/examples/agent_patterns/routing.py
 OpenAI Agents SDK,Financial Research Agent (Multi-Step Workflow),,https://github.com/openai/openai-agents-python/tree/main/examples/financial_research_agent
-Crew AI,Collaboration (Quickstart),,https://github.com/crewAIInc/crewAI-examples/tree/main/crews
+Crew AI,Markdown validator,,https://github.com/crewAIInc/crewAI-examples/tree/main/crews/markdown_validator
 Crew AI,Self Evaluation Loop Flow (Multi-Step Workflow & Graph),,https://github.com/crewAIInc/crewAI-examples/tree/main/flows/self_evaluation_loop_flow
 Crew AI,Lead Score Flow (Multi-Agent & Multi-Turn),,https://github.com/crewAIInc/crewAI-examples/tree/main/flows/lead-score-flow
 Crew AI,Marketing Strategy (Multi-Agent),,https://github.com/crewAIInc/crewAI-examples/tree/main/crews/marketing_strategy
