@@ -12,10 +12,11 @@ chatbot = Agent(
 
 @pixie_app
 async def chat_with_ai(_: NoneType) -> PixieGenerator[str, str]:
+    Agent.instrument_all()
+
     welcome = "Hello! How can I assist you today?"
-    m = ModelRequest.user_text_prompt(welcome)
-    history: list[ModelMessage] = [m]
     yield welcome
+    history: list[ModelMessage] = []
     while True:
         user_msg = yield UserInputRequirement(str)
         if user_msg.lower() in {"exit", "quit", "bye"}:

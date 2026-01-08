@@ -1681,6 +1681,18 @@ files = [
 ]
 
 [[package]]
+name = "janus"
+version = "2.0.0"
+description = "Mixed sync-async queue to interoperate between asyncio tasks and classic threads"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "janus-2.0.0-py3-none-any.whl", hash = "sha256:7e6449d34eab04cd016befbd7d8c0d8acaaaab67cb59e076a69149f9031745f9"},
+    {file = "janus-2.0.0.tar.gz", hash = "sha256:0970f38e0e725400496c834a368a67ee551dc3b5ad0a257e132f5b46f2e77770"},
+]
+
+[[package]]
 name = "jaraco-classes"
 version = "3.4.0"
 description = "Utility functions for Python class constructs"
@@ -2694,6 +2706,7 @@ colorlog = "^6.10.1"
 dotenv = "^0.9.9"
 fastapi = "^0.128.0"
 httpx = ">=0.15.4,<1.0"
+janus = "^2.0.0"
 nest-asyncio = "^1.6.0"
 opentelemetry-api = "^1.33.1"
 opentelemetry-exporter-otlp-proto-http = "^1.33.1"
