@@ -1,0 +1,29 @@
+Framework,Agent Name,Documentation Link,Source Code Link
+Pydantic AI,Pydantic Model (Quickstart),https://ai.pydantic.dev/examples/pydantic-model/,https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/pydantic_model.py
+Pydantic AI,Bank Support (Multi-Turn Chatbot),https://ai.pydantic.dev/examples/bank-support/,https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/bank_support.py
+Pydantic AI,Flight Booking (Multi-Agent),https://ai.pydantic.dev/examples/flight-booking/,https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/flight_booking.py
+Pydantic AI,Question Graph (Graph/State-Machine),https://ai.pydantic.dev/examples/question-graph/,https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/question_graph.py
+Pydantic AI,SQL Generation (Multi-Step Workflow),https://ai.pydantic.dev/examples/sql-gen/,https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/sql_gen.py
+OpenAI Agents SDK,LLM-as-a-judge,,https://github.com/openai/openai-agents-python/blob/main/examples/agent_patterns/llm_as_a_judge.py
+OpenAI Agents SDK,Customer Service (Multi-Agent & Multi-Turn),,https://github.com/openai/openai-agents-python/blob/main/examples/customer_service/main.py
+OpenAI Agents SDK,Routing/Handoffs (Graph/State-Machine),,https://github.com/openai/openai-agents-python/blob/main/examples/agent_patterns/routing.py
+OpenAI Agents SDK,Financial Research Agent (Multi-Step Workflow),,https://github.com/openai/openai-agents-python/tree/main/examples/financial_research_agent
+Crew AI,Collaboration (Quickstart),,https://github.com/crewAIInc/crewAI-examples/tree/main/crews
+Crew AI,Self Evaluation Loop Flow (Multi-Step Workflow & Graph),,https://github.com/crewAIInc/crewAI-examples/tree/main/flows/self_evaluation_loop_flow
+Crew AI,Lead Score Flow (Multi-Agent & Multi-Turn),,https://github.com/crewAIInc/crewAI-examples/tree/main/flows/lead-score-flow
+Crew AI,Marketing Strategy (Multi-Agent),,https://github.com/crewAIInc/crewAI-examples/tree/main/crews/marketing_strategy
+Crew AI,Content Creator Flow (Multi-Step Workflow),,https://github.com/crewAIInc/crewAI-examples/tree/main/flows/content_creator_flow
+Claude Agents SDK,Hello World (Quickstart),,https://github.com/anthropics/claude-agent-sdk-demos/tree/main/hello-world
+Claude Agents SDK,Email Agent (Multi-Turn & Multi-Step),,https://github.com/anthropics/claude-agent-sdk-demos/tree/main/email-agent
+Claude Agents SDK,Research Agent (Multi-Agent),,https://github.com/anthropics/claude-agent-sdk-demos/tree/main/research-agent
+LangChain,Basic agent (Quickstart),https://docs.langchain.com/oss/python/langchain/quickstart,
+LangChain,Personal assistant (Multi-Agent),https://docs.langchain.com/oss/python/langchain/multi-agent/subagents-personal-assistant,
+LangChain,Customer support with handoffs (State-Machine),https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs-customer-support,
+LangChain,SQL Agent (Multi-Turn & Multi-Step),https://docs.langchain.com/oss/python/langchain/sql-agent,
+LangGraph,SQL Agent (Graph),https://docs.langchain.com/oss/python/langgraph/sql-agent,
+LangGraph,RAG (Graph/State-Machine),https://docs.langchain.com/oss/python/langgraph/agentic-rag,
+Google ADK,Deep Research Agent,,https://github.com/google/adk-samples/tree/main/python/agents/deep-search
+Google ADK,Data Engineering Agent,,https://github.com/google/adk-samples/tree/main/python/agents/data-engineering
+Google ADK,Marketing Agency,,https://github.com/google/adk-samples/tree/main/python/agents/marketing-agency
+Google ADK,Software Bug Assistant,,https://github.com/google/adk-samples/tree/main/python/agents/software-bug-assistant
+Google ADK,Google Trends Agent,,https://github.com/google/adk-samples/tree/main/python/agents/google-trends-agent
