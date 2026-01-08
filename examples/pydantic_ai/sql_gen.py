@@ -12,11 +12,6 @@ from pydantic import BaseModel, Field
 from pydantic_ai import Agent, ModelRetry, RunContext, format_as_xml
 from pixie import pixie_app
 
-import logfire
-
-# Configure logfire
-logfire.configure(send_to_logfire="if-token-present")
-logfire.instrument_pydantic_ai()
 
 # Simulated database schema
 DB_SCHEMA = """

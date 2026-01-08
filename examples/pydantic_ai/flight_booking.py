@@ -20,10 +20,6 @@ from pydantic_ai import (
 )
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
 
-# Configure logfire
-logfire.configure(send_to_logfire="if-token-present")
-logfire.instrument_pydantic_ai()
-
 
 class FlightDetails(BaseModel):
     """Details of the most suitable flight."""

@@ -32,10 +32,6 @@ from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
 from pixie import pixie_app
 
-# Configure logfire
-logfire.configure(send_to_logfire="if-token-present")
-logfire.instrument_pydantic_ai()
-
 
 @dataclass
 class Deps:

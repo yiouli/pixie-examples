@@ -6,7 +6,6 @@ This demonstrates using pydantic_graph for complex control flow.
 from dataclasses import dataclass, field
 from types import NoneType
 
-import logfire
 from pydantic import BaseModel
 from pydantic_ai import Agent, ModelMessage, format_as_xml
 from pydantic_graph import (
@@ -16,10 +15,6 @@ from pydantic_graph import (
     GraphRunContext,
 )
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
-
-# Configure logfire
-logfire.configure(send_to_logfire="if-token-present")
-logfire.instrument_pydantic_ai()
 
 # Agent for asking questions
 ask_agent = Agent("openai:gpt-4o-mini", output_type=str)
