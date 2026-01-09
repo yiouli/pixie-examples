@@ -45,8 +45,6 @@ async def structured_output(query: str) -> MyModel:
     Returns:
         MyModel with extracted city and country
     """
-    # Enable instrumentation for Pixie observability
-    Agent.instrument_all()
 
     # Run the agent
     agent_result = await agent.run(query)

@@ -116,7 +116,6 @@ async def question_graph(_: NoneType) -> PixieGenerator[str, str]:
     The AI asks questions, the user answers, and the AI evaluates.
     If wrong, user gets reprimanded and a new question is asked.
     """
-    Agent.instrument_all()
 
     yield "🧠 Welcome to the Q&A Challenge!"
     yield "I'll ask you questions and evaluate your answers.\n"

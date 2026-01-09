@@ -70,7 +70,6 @@ class SleepyHaikuInput(BaseModel):
 @pixie_app
 async def sleepy_haiku(config: SleepyHaikuInput) -> PixieGenerator[str, None]:
     """Run one sleep + haiku cycle through the agent."""
-    Agent.instrument_all()
 
     yield f"Starting haiku cycles on topic: {config.topic}, repeating {config.iterations} times."
 

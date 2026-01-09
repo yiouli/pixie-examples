@@ -110,8 +110,6 @@ async def weather_agent(query: str) -> str:
     Returns:
         str: Weather information
     """
-    # Enable instrumentation
-    Agent.instrument_all()
 
     # Create HTTP client and dependencies
     async with AsyncClient() as client:

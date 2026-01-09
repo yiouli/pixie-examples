@@ -14,7 +14,7 @@ readme = "README.md"
 python = ">=3.10,<3.14"
 pydantic-ai-slim = "^1.39.0"
 pydantic = {version = "^2.7.4", extras = []}
-pixie-ai-sdk = "^0.1.2"
+pixie-ai-sdk = "^0.1.4"
 openai-agents = "^0.6.5"
 pymarkdownlnt = "^0.9.34"
 langchain = "^1.2.3"
@@ -25,6 +25,10 @@ beautifulsoup4 = "^4.14.3"
 lxml = "^6.0.2"
 requests = "^2.32.5"
 sqlalchemy = "^2.0.45"
+openinference-instrumentation-openai-agents = "^1.4.0"
+openinference-instrumentation-google-adk = "^0.1.8"
+openinference-instrumentation-crewai = "^0.1.17"
+openinference-instrumentation-dspy = "^0.1.33"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

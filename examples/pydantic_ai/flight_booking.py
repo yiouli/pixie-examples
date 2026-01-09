@@ -182,7 +182,6 @@ async def flight_booking(_: NoneType) -> PixieGenerator[str, str]:
     - Programmatic agent hand-off (search -> seat selection)
     - Interactive user input for flight confirmation and seat preference
     """
-    Agent.instrument_all()
 
     deps = Deps(
         web_page_text=flights_web_page,

@@ -1,28 +1,20 @@
-from types import NoneType
-from pydantic_ai import Agent, ModelMessage, ModelRequest
+from langfuse.openai import openai  # type: ignore
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
 
-chatbot = Agent(
-    "openai:gpt-4o-mini",
-    system_prompt=(
-        "You are a friendly chatbot. Answer user questions concisely and helpfully."
-    ),
-)
+client = openai.AsyncClient()
 
 
 @pixie_app
-async def chat(_: NoneType) -> PixieGenerator[str, str]:
-    Agent.instrument_all()
+async def chat(_: None) -> PixieGenerator[str, str]:
 
-    welcome = "Hello! How can I assist you today?"
-    yield welcome
-    history: list[ModelMessage] = []
+    yield "How can I help you today?"
+    messages = []
     while True:
         user_msg = yield UserInputRequirement(str)
-        if user_msg.lower() in {"exit", "quit", "bye"}:
-            yield "Goodbye! Have a great day!"
-            break
-        ai_response = await chatbot.run(user_msg, message_history=history)
-        history.append(ModelRequest.user_text_prompt(user_msg))
-        history.append(ai_response.response)
-        yield ai_response.output
+        messages.append({"role": "user", "content": user_msg})
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini", messages=messages
+        )
+        ai_response = response.choices[0].message.content or ""
+        messages.append({"role": "assistant", "content": ai_response})
+        yield ai_response

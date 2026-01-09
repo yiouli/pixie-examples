@@ -111,8 +111,6 @@ async def bank_support_agent(_: NoneType) -> PixieGenerator[str, str]:
     Receives:
         str: User queries via UserInputRequirement
     """
-    # Enable instrumentation
-    Agent.instrument_all()
 
     # Initialize database connection (in-memory for demo)
     with sqlite3.connect(":memory:") as con:

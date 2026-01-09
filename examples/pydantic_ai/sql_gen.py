@@ -146,7 +146,6 @@ async def sql_gen(query: str) -> str:
     Returns:
         Generated SQL query or error message
     """
-    Agent.instrument_all()
 
     deps = Deps(validate_sql=True)
     result = await agent.run(query, deps=deps)
