@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pixie-examples"
+name = "pixie-ai-examples"
 packages = [
     { include = "examples" }
 ]
@@ -13,7 +13,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"
 pydantic-ai = "^1.39.0"
-pixie-sdk = {path = "../pixie-sdk-py", develop = true}
+pixie-ai-sdk = "^0.1.0"
 openai-agents = "^0.6.5"
 pymarkdownlnt = "^0.9.34"
 langchain = "^1.2.3"
@@ -24,3 +24,7 @@ langchain-text-splitters = "^1.1.0"
 beautifulsoup4 = "^4.14.3"
 lxml = "^6.0.2"
 requests = "^2.32.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

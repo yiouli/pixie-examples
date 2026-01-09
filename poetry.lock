@@ -3630,37 +3630,35 @@ readme = ["path (>=13,<18)", "readmemaker (>=1.2.0)"]
 test = ["Faker (>=1.0.8)", "allpairspy (>=2)", "click (>=6.2)", "pytest (>=6.0.1)", "pytest-md-report (>=0.6.2)"]
 
 [[package]]
-name = "pixie-sdk"
+name = "pixie-ai-sdk"
 version = "0.1.0"
 description = "Pixie SDK for running AI applications and agents"
 optional = false
-python-versions = ">=3.10,<4.0"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
-files = []
-develop = true
+files = [
+    {file = "pixie_ai_sdk-0.1.0-py3-none-any.whl", hash = "sha256:079626283c8cea0f19ac3a7b3c4664078f90c2a65b48c49ede7ee1fcdd740c10"},
+    {file = "pixie_ai_sdk-0.1.0.tar.gz", hash = "sha256:da891fa4daed4d719ddd1e5eaaed39f635aa8671d10eec50f7cb590bf4b67344"},
+]
 
 [package.dependencies]
 backoff = ">=1.10.0"
-colorlog = "^6.10.1"
-dotenv = "^0.9.9"
-fastapi = "^0.128.0"
+colorlog = ">=6.10.1,<7.0.0"
+dotenv = ">=0.9.9,<0.10.0"
+fastapi = ">=0.128.0,<0.129.0"
 httpx = ">=0.15.4,<1.0"
-janus = "^2.0.0"
-nest-asyncio = "^1.6.0"
-opentelemetry-api = "^1.33.1"
-opentelemetry-exporter-otlp-proto-http = "^1.33.1"
-opentelemetry-sdk = "^1.33.1"
+janus = ">=2.0.0,<3.0.0"
+nest-asyncio = ">=1.6.0,<2.0.0"
+opentelemetry-api = ">=1.33.1,<2.0.0"
+opentelemetry-exporter-otlp-proto-http = ">=1.33.1,<2.0.0"
+opentelemetry-sdk = ">=1.33.1,<2.0.0"
 packaging = ">=23.2,<26.0"
-pydantic = ">=1.10.7, <3.0"
-pydantic-ai = "^1.39.0"
-requests = "^2"
-strawberry-graphql = "^0.288.1"
-uvicorn = "^0.40.0"
-wrapt = "^1.14"
-
-[package.source]
-type = "directory"
-url = "../pixie-sdk-py"
+pydantic = ">=1.10.7,<3.0"
+pydantic-ai = ">=1.39.0,<2.0.0"
+requests = ">=2,<3"
+strawberry-graphql = ">=0.288.1,<0.289.0"
+uvicorn = ">=0.40.0,<0.41.0"
+wrapt = ">=1.14,<2.0"
 
 [[package]]
 name = "platformdirs"
@@ -6389,4 +6387,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "418da0dc85d94de8758acbca0cb435edec3e48215fc01624e1d46035c86d3bad"
+content-hash = "1f526e975f7934f55f3458241cddcb4c6cf8da6243c96995043c35a632dac918"
