@@ -13,13 +13,13 @@ Available handlers:
 For usage details, see README.md
 """
 
-from .llm_as_a_judge import llm_judge_story_generator
+from .llm_as_a_judge import llm_as_a_judge
 from .customer_service import airline_customer_service
 from .routing import multilingual_routing, multilingual_routing_simple
 from .financial_research_agent import financial_research
 
 __all__ = [
-    "llm_judge_story_generator",
+    "llm_as_a_judge",
     "airline_customer_service",
     "multilingual_routing",
     "multilingual_routing_simple",
