@@ -20,10 +20,9 @@ import requests
 from types import NoneType
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from langchain_community.utilities import SQLDatabase
-from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langgraph.checkpoint.memory import InMemorySaver
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
+from .sql_utils import SQLDatabase, SQLDatabaseToolkit
 
 
 # System prompt for SQL agent

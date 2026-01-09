@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from typing import Literal
 from types import NoneType
 
-import logfire
 from pydantic import BaseModel, Field
 from pydantic_ai import (
     Agent,
@@ -67,7 +66,6 @@ async def extract_flights(ctx: RunContext[Deps]) -> list[FlightDetails]:
     """Get details of all flights."""
     # we pass the usage to the search agent so requests within this agent are counted
     agent_result = await extraction_agent.run(ctx.deps.web_page_text, usage=ctx.usage)
-    logfire.info("found {flight_count} flights", flight_count=len(agent_result.output))
     return agent_result.output
 
 

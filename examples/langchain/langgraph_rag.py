@@ -15,13 +15,31 @@ from typing import Literal
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
 from langchain.messages import HumanMessage
-from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from pixie import pixie_app
+import requests
+from bs4 import BeautifulSoup
+
+
+def load_web_page(url: str) -> list[Document]:
+    """Simple web page loader using requests and BeautifulSoup.
+
+    Replaces langchain_community.document_loaders.WebBaseLoader
+    to avoid the langchain-community dependency.
+    """
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    # Extract text from the page
+    text = soup.get_text(separator="\n", strip=True)
+
+    return [Document(page_content=text, metadata={"source": url})]
 
 
 def setup_vectorstore():
@@ -34,7 +52,7 @@ def setup_vectorstore():
         "https://lilianweng.github.io/posts/2024-04-12-diffusion-video/",
     ]
 
-    docs = [WebBaseLoader(url).load() for url in urls]
+    docs = [load_web_page(url) for url in urls]
     docs_list = [item for sublist in docs for item in sublist]
 
     print("Splitting documents...")

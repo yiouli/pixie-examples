@@ -26,7 +26,6 @@ Then query via GraphQL:
 import asyncio
 from dataclasses import dataclass
 from typing import Any
-import logfire
 from httpx import AsyncClient
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
@@ -116,7 +115,6 @@ async def weather_agent(query: str) -> str:
 
     # Create HTTP client and dependencies
     async with AsyncClient() as client:
-        logfire.instrument_httpx(client, capture_all=True)
         deps = Deps(client=client)
 
         # Run the agent
