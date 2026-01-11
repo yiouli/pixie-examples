@@ -6,6 +6,7 @@ client = openai.AsyncClient()
 
 @pixie_app
 async def chat(_: None) -> PixieGenerator[str, str]:
+    """A simple chatbot using GPT-4o-mini."""
 
     yield "How can I help you today?"
     messages = []

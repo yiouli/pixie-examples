@@ -37,7 +37,7 @@ mutation {
 
 import asyncio
 import logging
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_ai import Agent, RunContext
 
 from pixie import pixie_app, PixieGenerator
@@ -63,8 +63,10 @@ async def sleep_for_a_bit(_ctx: RunContext[None]) -> str:
 
 
 class SleepyHaikuInput(BaseModel):
-    topic: str
-    iterations: int = 10
+    """Input config for sleepy haiku agent."""
+
+    topic: str = Field(..., description="The topic to write haikus about.")
+    iterations: int = Field(3, description="Number of haiku iterations to generate.")
 
 
 @pixie_app
