@@ -54,7 +54,7 @@ class HaikuRequest(BaseModel):
     count: int = Field(3, description="Number of haikus to write.")
 
 
-@pixie.pixie_app
+@pixie.app
 async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
     """An interactive agent that writes haikus while taking naps.
 
@@ -73,7 +73,7 @@ async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
 
     while True:
         yield "What's your request?"
-        config = yield pixie.UserInputRequirement(HaikuRequest)
+        config = yield pixie.InputRequired(HaikuRequest)
 
         async def write_haikus():
             for i in range(0, config.count):

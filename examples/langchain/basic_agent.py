@@ -15,7 +15,7 @@ def get_weather(city: str) -> str:
     return f"It's always sunny in {city}!"
 
 
-@pixie.pixie_app
+@pixie.app
 async def basic_weather_agent(query: str) -> str:
     """A simple weather agent that can answer questions using tools.
 
@@ -42,7 +42,7 @@ async def basic_weather_agent(query: str) -> str:
     return result["messages"][-1].content
 
 
-@pixie.pixie_app
+@pixie.app
 async def interactive_weather_agent() -> pixie.PixieGenerator[str, str]:
     """An interactive weather chatbot that maintains conversation.
 
@@ -69,7 +69,7 @@ async def interactive_weather_agent() -> pixie.PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_query = yield pixie.UserInputRequirement(str)
+        user_query = yield pixie.InputRequired(str)
 
         # Check for exit commands
         if user_query.lower() in {"exit", "quit", "bye", "goodbye"}:

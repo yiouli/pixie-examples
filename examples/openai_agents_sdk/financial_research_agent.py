@@ -243,7 +243,7 @@ async def _verify_report(report: FinancialReportData) -> VerificationResult:
 # ============================================================================
 
 
-@pixie.pixie_app
+@pixie.app
 async def financial_research(query: str) -> pixie.PixieGenerator[str, None]:
     """
     Comprehensive financial research agent with multi-step workflow.

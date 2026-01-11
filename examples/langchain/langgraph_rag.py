@@ -190,7 +190,7 @@ def create_rag_graph(retriever, model):
     return workflow.compile()
 
 
-@pixie.pixie_app
+@pixie.app
 async def langgraph_rag_agent(question: str) -> str:
     """Agentic RAG system that can answer questions about Lilian Weng's blog posts.
 

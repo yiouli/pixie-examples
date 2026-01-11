@@ -70,7 +70,7 @@ def setup_database():
     return SQLDatabase.from_uri("sqlite:///Chinook.db")
 
 
-@pixie.pixie_app
+@pixie.app
 async def sql_query_agent(question: str) -> str:
     """SQL database query agent that can answer questions about the Chinook database.
 
@@ -106,7 +106,7 @@ async def sql_query_agent(question: str) -> str:
     return result["messages"][-1].content
 
 
-@pixie.pixie_app
+@pixie.app
 async def interactive_sql_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive SQL database query agent with multi-turn conversation.
 
@@ -152,7 +152,7 @@ Ask me any question about the data!"""
 
     while True:
         # Get user question
-        user_question = yield pixie.UserInputRequirement(str)
+        user_question = yield pixie.InputRequired(str)
 
         # Check for exit
         if user_question.lower() in {"exit", "quit", "bye"}:

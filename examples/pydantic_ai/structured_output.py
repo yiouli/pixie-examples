@@ -35,7 +35,7 @@ model = os.getenv("PYDANTIC_AI_MODEL", "openai:gpt-4o-mini")
 agent = Agent(model, output_type=MyModel)
 
 
-@pixie.pixie_app
+@pixie.app
 async def structured_output(query: str) -> MyModel:
     """Extract city and country information from a text query.
 

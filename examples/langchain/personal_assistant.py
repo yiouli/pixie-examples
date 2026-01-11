@@ -67,7 +67,7 @@ SUPERVISOR_PROMPT = (
 )
 
 
-@pixie.pixie_app
+@pixie.app
 async def personal_assistant() -> pixie.PixieGenerator[str, str]:
     """Multi-agent personal assistant with calendar and email subagents.
 
@@ -140,7 +140,7 @@ async def personal_assistant() -> pixie.PixieGenerator[str, str]:
 
     while True:
         # Get user request
-        user_request = yield pixie.UserInputRequirement(str)
+        user_request = yield pixie.InputRequired(str)
 
         # Check for exit
         if user_request.lower() in {"exit", "quit", "bye", "goodbye"}:

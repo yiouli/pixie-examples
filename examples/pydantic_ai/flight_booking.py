@@ -172,7 +172,7 @@ flights_web_page = """
 usage_limits = UsageLimits(request_limit=15)
 
 
-@pixie.pixie_app
+@pixie.app
 async def flight_booking() -> pixie.PixieGenerator[str, str]:
     """Multi-agent flight booking with search, extraction, and seat selection.
 
@@ -214,7 +214,7 @@ async def flight_booking() -> pixie.PixieGenerator[str, str]:
             yield f"   Date: {flight.date}"
             yield "\nDo you want to buy this flight, or keep searching? (buy/search)"
 
-            answer = yield pixie.UserInputRequirement(str)
+            answer = yield pixie.InputRequired(str)
             answer = answer.lower().strip()
 
             if answer == "buy":
@@ -224,7 +224,7 @@ async def flight_booking() -> pixie.PixieGenerator[str, str]:
 
                 while True:
                     yield 'What seat would you like? (e.g., "row 1 seat A" or "window seat with leg room")'
-                    seat_input = yield pixie.UserInputRequirement(str)
+                    seat_input = yield pixie.InputRequired(str)
 
                     seat_result = await seat_preference_agent.run(
                         seat_input,
@@ -254,7 +254,7 @@ async def flight_booking() -> pixie.PixieGenerator[str, str]:
 async def test():
     """Test function for local development."""
     async for message in flight_booking(None):
-        if isinstance(message, pixie.UserInputRequirement):
+        if isinstance(message, pixie.InputRequired):
             # Simulate user input for testing
             if "buy" in str(message):
                 message = "buy"

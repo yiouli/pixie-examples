@@ -77,7 +77,7 @@ async def get_weather(ctx: RunContext[Deps], lat: float, lng: float) -> dict[str
     }
 
 
-@pixie.pixie_app
+@pixie.app
 async def example_weather_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive weather agent.
 
@@ -105,6 +105,6 @@ async def example_weather_agent() -> pixie.PixieGenerator[str, str]:
         stop_words = ["exit", "quit", "stop"]
         while user_message not in stop_words:
             yield "What location would you like the weather for?"
-            user_message = yield pixie.UserInputRequirement(str)
+            user_message = yield pixie.InputRequired(str)
             result = await agent.run(user_message, deps=deps)
             yield result.output

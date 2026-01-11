@@ -192,7 +192,7 @@ faq_agent.handoffs.append(triage_agent)
 seat_booking_agent.handoffs.append(triage_agent)
 
 
-@pixie.pixie_app
+@pixie.app
 async def airline_customer_service() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent customer service chatbot for an airline.
@@ -208,7 +208,7 @@ async def airline_customer_service() -> pixie.PixieGenerator[str, str]:
         Agent responses and status updates
 
     Receives:
-        User messages via UserInputRequirement
+        User messages via InputRequired
     """
     current_agent: Agent[AirlineAgentContext] = triage_agent
     input_items: list[TResponseInputItem] = []
@@ -219,7 +219,7 @@ async def airline_customer_service() -> pixie.PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_input = yield pixie.UserInputRequirement(str)
+        user_input = yield pixie.InputRequired(str)
 
         # Check for exit commands
         if user_input.lower() in {"exit", "quit", "bye"}:

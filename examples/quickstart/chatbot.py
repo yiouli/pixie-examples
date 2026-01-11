@@ -9,7 +9,7 @@ agent = Agent(
 )
 
 
-@pixie.pixie_app
+@pixie.app
 async def example_chatbot():
     """A simple chatbot using Pydantic-AI agent with GPT-4o-mini.
 
@@ -19,7 +19,7 @@ async def example_chatbot():
     yield "How can I help you today?"
     messages = []
     while True:
-        user_msg = yield pixie.UserInputRequirement(str)
+        user_msg = yield pixie.InputRequired(str)
         response = await agent.run(user_msg, message_history=messages)
         messages = response.all_messages()
         yield response.output

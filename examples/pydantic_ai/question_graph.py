@@ -108,7 +108,7 @@ _question_graph = Graph(
 )
 
 
-@pixie.pixie_app
+@pixie.app
 async def question_graph() -> pixie.PixieGenerator[str, str]:
     """Interactive Q&A game using graph-based state machine.
 
@@ -134,7 +134,7 @@ async def question_graph() -> pixie.PixieGenerator[str, str]:
                 # Ask user for their answer
                 yield f"\n❓ Question: {node.question}"
                 yield "What is your answer?"
-                state.answer = yield pixie.UserInputRequirement(str)
+                state.answer = yield pixie.InputRequired(str)
                 # Continue with the user's answer by passing it to the next iteration
                 # The graph will automatically move to Evaluate with this answer
                 continue
@@ -156,7 +156,7 @@ async def question_graph() -> pixie.PixieGenerator[str, str]:
 async def test():
     """Test function for local development."""
     async for message in question_graph(None):
-        if isinstance(message, pixie.UserInputRequirement):
+        if isinstance(message, pixie.InputRequired):
             # Simulate user input for testing
             message = "Paris"  # Assuming a capital question
         print(message)

@@ -97,7 +97,7 @@ async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
     return f"${balance:.2f}"
 
 
-@pixie.pixie_app
+@pixie.app
 async def bank_support_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive bank support agent.
 
@@ -108,7 +108,7 @@ async def bank_support_agent() -> pixie.PixieGenerator[str, str]:
         str: Agent responses and support advice
 
     Receives:
-        str: User queries via UserInputRequirement
+        str: User queries via InputRequired
     """
 
     # Initialize database connection (in-memory for demo)
@@ -134,7 +134,7 @@ async def bank_support_agent() -> pixie.PixieGenerator[str, str]:
 
         while True:
             # Get user query
-            user_query = yield pixie.UserInputRequirement(str)
+            user_query = yield pixie.InputRequired(str)
 
             # Check for exit commands
             if user_query.lower() in {"exit", "quit", "bye"}:
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     async def test():
         async for response in bank_support_agent(None):
             print(response)
-            if isinstance(response, pixie.UserInputRequirement):
+            if isinstance(response, pixie.InputRequired):
                 # In real usage, Pixie handles this
                 break
 

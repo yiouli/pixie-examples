@@ -130,7 +130,7 @@ async def validate_output(ctx: RunContext[Deps], output: Response) -> Response:
     return output
 
 
-@pixie.pixie_app
+@pixie.app
 async def sql_gen(query: str) -> str:
     """SQL generation agent with multi-step workflow and validation.
 

@@ -204,7 +204,7 @@ Then navigate to `http://127.0.0.1:8000/graphql` to use the GraphiQL interface.
 Examples use `PixieGenerator[str, str]` with `UserInputRequirement(str)` for interactive dialogues:
 
 ```python
-@pixie_app
+@app
 async def my_chatbot(_: None) -> PixieGenerator[str, str]:
     yield "Hello! How can I help?"
 
@@ -294,6 +294,6 @@ To add more OpenAI Agents SDK examples:
 1. Create a new `.py` file in this directory
 2. Import required modules from `agents` and `pixie`
 3. Define your agents and tools
-4. Create a Pixie handler with `@pixie_app` decorator
+4. Create a Pixie handler with `@app` decorator
 5. Use `PixieGenerator` for multi-turn or streaming applications
 6. Update this README with example details

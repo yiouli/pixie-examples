@@ -167,7 +167,7 @@ def apply_step_config(
     return handler(request)
 
 
-@pixie.pixie_app
+@pixie.app
 async def customer_support() -> pixie.PixieGenerator[str, str]:
     """Customer support agent with state machine workflow.
 
@@ -208,7 +208,7 @@ async def customer_support() -> pixie.PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_message = yield pixie.UserInputRequirement(str)
+        user_message = yield pixie.InputRequired(str)
 
         # Check for exit
         if user_message.lower() in {"exit", "quit", "bye"}:

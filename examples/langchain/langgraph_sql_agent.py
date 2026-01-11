@@ -166,7 +166,7 @@ You will call the appropriate tool to execute the query after running this check
     return builder.compile(checkpointer=InMemorySaver())
 
 
-@pixie.pixie_app
+@pixie.app
 async def langgraph_sql_agent(question: str) -> str:
     """Custom SQL agent built with LangGraph primitives.
 

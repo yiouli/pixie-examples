@@ -231,9 +231,9 @@ subscription {
 All examples use:
 
 ```python
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+from pixie import app, PixieGenerator, UserInputRequirement
 
-@pixie_app
+@app
 async def my_handler(input: InputType) -> OutputType:
     Agent.instrument_all()  # Enable observability
     # ... implementation

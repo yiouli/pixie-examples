@@ -42,7 +42,7 @@ triage_agent = Agent(
 )
 
 
-@pixie.pixie_app
+@pixie.app
 async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent language routing system with streaming responses.
@@ -56,7 +56,7 @@ async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
         Streamed agent responses
 
     Receives:
-        User messages in any supported language via UserInputRequirement
+        User messages in any supported language via InputRequired
     """
     agent = triage_agent
     inputs: list[TResponseInputItem] = []
@@ -66,7 +66,7 @@ async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
 
     while True:
         # Get user message
-        user_msg = yield pixie.UserInputRequirement(str)
+        user_msg = yield pixie.InputRequired(str)
 
         # Check for exit
         if user_msg.lower() in {"exit", "quit", "bye"}:
@@ -107,7 +107,7 @@ async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
         yield f"\n[Handled by: {agent_name}]"
 
 
-@pixie.pixie_app
+@pixie.app
 async def multilingual_routing_simple(
     initial_message: str,
 ) -> pixie.PixieGenerator[str, str]:
@@ -124,7 +124,7 @@ async def multilingual_routing_simple(
         Streamed agent responses
 
     Receives:
-        Follow-up user messages via UserInputRequirement
+        Follow-up user messages via InputRequired
     """
     agent = triage_agent
     inputs: list[TResponseInputItem] = [{"content": initial_message, "role": "user"}]
@@ -152,7 +152,7 @@ async def multilingual_routing_simple(
     yield "\nContinue the conversation (type 'exit' to quit):"
 
     while True:
-        user_msg = yield pixie.UserInputRequirement(str)
+        user_msg = yield pixie.InputRequired(str)
 
         if user_msg.lower() in {"exit", "quit", "bye"}:
             yield "Session ended. Merci! ¡Gracias! Thank you!"

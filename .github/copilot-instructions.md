@@ -2,13 +2,13 @@
 
 ## Overview
 
-This guide explains how to build applications using the Pixie SDK. Pixie provides observability and control for AI agents by wrapping agent functions with the `@pixie_app` decorator.
+This guide explains how to build applications using the Pixie SDK. Pixie provides observability and control for AI agents by wrapping agent functions with the `@app` decorator.
 
 ## Core Concepts
 
-### The `@pixie_app` Decorator
+### The `@app` Decorator
 
-All Pixie applications must be decorated with `@pixie_app`. This decorator enables:
+All Pixie applications must be decorated with `@app`. This decorator enables:
 
 - Automatic discovery by the Pixie server
 - Observability and tracing
@@ -24,7 +24,7 @@ Pixie handlers must be **async functions** or **async generators** with specific
 For simple, single-turn applications:
 
 ```python
-@pixie_app
+@app
 async def my_app(input: InputType) -> OutputType:
     # Implementation
     return output
@@ -38,7 +38,7 @@ async def my_app(input: InputType) -> OutputType:
 For multi-turn, interactive applications:
 
 ```python
-@pixie_app
+@app
 async def my_app(input: InputType) -> PixieGenerator[YieldType, SendType]:
     # Implementation
     yield output
@@ -59,7 +59,7 @@ Use `None` when the application doesn't require input:
 
 ```python
 
-@pixie_app
+@app
 async def my_app(_: None) -> str:
     return "No input needed"
 ```
@@ -67,7 +67,7 @@ async def my_app(_: None) -> str:
 ### Accepting String Input
 
 ```python
-@pixie_app
+@app
 async def my_app(query: str) -> str:
     return f"You asked: {query}"
 ```
@@ -81,7 +81,7 @@ class MyInput(BaseModel):
     topic: str
     iterations: int = 10
 
-@pixie_app
+@app
 async def my_app(config: MyInput) -> str:
     return f"Processing {config.topic} for {config.iterations} iterations"
 ```
@@ -93,7 +93,7 @@ async def my_app(config: MyInput) -> str:
 For async functions, return JSON-serializable data or Pydantic models:
 
 ```python
-@pixie_app
+@app
 async def simple_agent(query: str) -> str:
     Agent.instrument_all()
     result = await agent.run(query)
@@ -105,7 +105,7 @@ async def simple_agent(query: str) -> str:
 For async generators, yield values of the declared `YieldType`:
 
 ```python
-@pixie_app
+@app
 async def streaming_agent(query: str) -> PixieGenerator[str, None]:
     yield "Starting processing..."
     result = await agent.run(query)
@@ -121,7 +121,7 @@ For interactive applications that need to receive user input mid-execution, use 
 ```python
 from pixie import UserInputRequirement
 
-@pixie_app
+@app
 async def interactive_app(initial: str) -> PixieGenerator[str, str]:
     yield "Welcome! Please provide input."
 
@@ -177,7 +177,7 @@ user_data = yield UserInputRequirement(dict)
 ```python
 from pydantic import BaseModel
 from pydantic_ai import Agent
-from pixie import pixie_app
+from pixie import app
 
 # Define input model
 class WeatherQuery(BaseModel):
@@ -189,7 +189,7 @@ weather_agent = Agent(
     system_prompt="You are a helpful weather assistant."
 )
 
-@pixie_app
+@app
 async def weather(query: WeatherQuery) -> str:
     """Simple weather query agent."""
     # Enable instrumentation for observability
@@ -207,14 +207,14 @@ async def weather(query: WeatherQuery) -> str:
 ```python
 from types import None
 from pydantic_ai import Agent, ModelMessage, ModelRequest
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+from pixie import app, PixieGenerator, UserInputRequirement
 
 chatbot = Agent(
     "openai:gpt-4o-mini",
     system_prompt="You are a friendly chatbot. Answer questions concisely."
 )
 
-@pixie_app
+@app
 async def chat_with_ai(_: None) -> PixieGenerator[str, str]:
     """Interactive chatbot with conversation history."""
     # Enable instrumentation
@@ -251,7 +251,7 @@ async def chat_with_ai(_: None) -> PixieGenerator[str, str]:
 ```python
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import pixie_app, PixieGenerator
+from pixie import app, PixieGenerator
 
 # Define input model
 class GenerationConfig(BaseModel):
@@ -264,7 +264,7 @@ generator_agent = Agent(
     system_prompt="You generate creative content on any topic."
 )
 
-@pixie_app
+@app
 async def generate_content(config: GenerationConfig) -> PixieGenerator[str, None]:
     """Generate multiple outputs iteratively."""
     Agent.instrument_all()
@@ -286,7 +286,7 @@ async def generate_content(config: GenerationConfig) -> PixieGenerator[str, None
 from typing import Literal
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import pixie_app
+from pixie import app
 
 # Tool result model
 class DatabaseResult(BaseModel):
@@ -308,7 +308,7 @@ async def query_database(ctx: RunContext[None], query: str) -> DatabaseResult:
         data={"result": f"Found data for: {query}"}
     )
 
-@pixie_app
+@app
 async def db_assistant(query: str) -> str:
     """Database query assistant with tools."""
     Agent.instrument_all()
@@ -324,7 +324,7 @@ async def db_assistant(query: str) -> str:
 Call `Agent.instrument_all()` at the start of your handler:
 
 ```python
-@pixie_app
+@app
 async def my_app(input: str) -> str:
     Agent.instrument_all()  # Required for Pixie observability
     # ... rest of implementation
@@ -336,12 +336,12 @@ Clearly annotate input, output, and generator types:
 
 ```python
 # Good
-@pixie_app
+@app
 async def chat(initial: str) -> PixieGenerator[str, str]:
     ...
 
 # Avoid
-@pixie_app
+@app
 async def chat(initial):  # Missing type hints
     ...
 ```
@@ -351,7 +351,7 @@ async def chat(initial):  # Missing type hints
 Import all necessary types from `pixie`:
 
 ```python
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+from pixie import app, PixieGenerator, UserInputRequirement
 ```
 
 ### 4. Handle User Input Type Safety
@@ -379,7 +379,7 @@ class Result(BaseModel):
     status: str
     data: dict
 
-@pixie_app
+@app
 async def my_app(config: Config) -> Result:
     return Result(status="success", data={})
 ```
@@ -389,7 +389,7 @@ async def my_app(config: Config) -> Result:
 Document what your application does:
 
 ```python
-@pixie_app
+@app
 async def my_app(query: str) -> str:
     """Process user queries and return helpful responses.
 
@@ -479,7 +479,7 @@ PixieGenerator[YieldType, SendType]
 
 ### Issue: Handler not discovered by Pixie server
 
-- **Solution**: Ensure function is decorated with `@pixie_app`
+- **Solution**: Ensure function is decorated with `@app`
 - **Solution**: Check that the file is in a directory scanned by Pixie (e.g., `examples/`)
 
 ### Issue: Type errors with UserInputRequirement
@@ -493,7 +493,7 @@ PixieGenerator[YieldType, SendType]
 ### Issue: Import errors
 
 - **Solution**: Ensure `pixie-sdk` is installed and available
-- **Solution**: Check imports: `from pixie import pixie_app, PixieGenerator, UserInputRequirement`
+- **Solution**: Check imports: `from pixie import app, PixieGenerator, UserInputRequirement`
 
 ## Testing Your Application
 
@@ -534,7 +534,7 @@ poetry run python -c "from examples.quickstart.my_app import my_app"
 
 When creating a Pixie application, ensure:
 
-- [ ] Function is decorated with `@pixie_app`
+- [ ] Function is decorated with `@app`
 - [ ] Function is `async def` (async function or async generator)
 - [ ] Input parameter has proper type annotation (or `NoneType`)
 - [ ] Return type is properly annotated (`str`, `BaseModel`, or `PixieGenerator[YieldType, SendType]`)
