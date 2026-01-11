@@ -1,27 +1,4 @@
-"""Weather agent example with multiple tools.
-
-This example demonstrates:
-- Multiple tools that need to be called in sequence
-- Agent dependencies for HTTP client
-- Streaming text responses
-- Integration with Pixie SDK
-
-The agent uses two tools:
-1. get_lat_lng: Get latitude/longitude from location description
-2. get_weather: Get weather data for given coordinates
-
-Run with:
-    poetry run pixie
-
-Then query via GraphQL:
-    subscription {
-      run(name: "weather_agent", inputData: "What is the weather in London?") {
-        runId
-        status
-        data
-      }
-    }
-"""
+"""Interactive weather agent."""
 
 import asyncio
 from dataclasses import dataclass
@@ -29,7 +6,7 @@ from typing import Any
 from httpx import AsyncClient
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import pixie_app
+from pixie import PixieGenerator, UserInputRequirement, pixie_app
 
 
 @dataclass
@@ -47,7 +24,7 @@ class LatLng(BaseModel):
 
 
 # Create the weather agent
-_weather_agent = Agent(
+agent = Agent(
     "openai:gpt-4o-mini",
     instructions="Be concise, reply with one sentence.",
     deps_type=Deps,
@@ -55,7 +32,7 @@ _weather_agent = Agent(
 )
 
 
-@_weather_agent.tool
+@agent.tool
 async def get_lat_lng(ctx: RunContext[Deps], location_description: str) -> LatLng:
     """Get the latitude and longitude of a location.
 
@@ -72,7 +49,7 @@ async def get_lat_lng(ctx: RunContext[Deps], location_description: str) -> LatLn
     return LatLng.model_validate_json(r.content)
 
 
-@_weather_agent.tool
+@agent.tool
 async def get_weather(ctx: RunContext[Deps], lat: float, lng: float) -> dict[str, Any]:
     """Get the weather at a location.
 
@@ -101,32 +78,33 @@ async def get_weather(ctx: RunContext[Deps], lat: float, lng: float) -> dict[str
 
 
 @pixie_app
-async def weather_agent(query: str) -> str:
-    """Get weather information for a location.
+async def example_weather_agent(_: None) -> PixieGenerator[str, str]:
+    """Interactive weather agent.
 
-    Args:
-        query: Natural language query about weather (e.g., "What is the weather in London?")
+    This agent interacts with the user to get weather information for a specified location.
+    It uses tools to fetch latitude/longitude and weather data, and supports a multi-turn
+    conversation with the user.
 
-    Returns:
-        str: Weather information
+    The agent will:
+    - Prompt the user for a location.
+    - Fetch latitude and longitude for the location.
+    - Retrieve weather data for the coordinates.
+    - Display the weather information to the user.
+
+    The conversation continues until the user enters a stop word ('exit', 'quit', or 'stop').
     """
+
+    yield "Hi! I can help you find the weather for any location."
+    yield "Enter 'exit', 'quit', or 'stop' to end the conversation."
 
     # Create HTTP client and dependencies
     async with AsyncClient() as client:
         deps = Deps(client=client)
 
-        # Run the agent
-        agent_result = await _weather_agent.run(query, deps=deps)
-
-        return agent_result.output
-
-
-if __name__ == "__main__":
-    # For testing locally
-    async def test():
-        output = await weather_agent(
-            "What is the weather like in London and in Wiltshire?"
-        )
-        print("Response:", output)
-
-    asyncio.run(test())
+        user_message = None
+        stop_words = ["exit", "quit", "stop"]
+        while user_message not in stop_words:
+            yield "What location would you like the weather for?"
+            user_message = yield UserInputRequirement(str)
+            result = await agent.run(user_message, deps=deps)
+            yield result.output

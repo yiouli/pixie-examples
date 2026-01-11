@@ -1,21 +1,25 @@
-from langfuse.openai import openai  # type: ignore
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+from pydantic_ai import Agent
 
-client = openai.AsyncClient()
+import pixie
+
+agent = Agent(
+    name="Simple chatbot",
+    instructions="You are a helpful assistant.",
+    model="gpt-4o-mini",
+)
 
 
-@pixie_app
-async def chat(_: None) -> PixieGenerator[str, str]:
-    """A simple chatbot using GPT-4o-mini."""
+@pixie.pixie_app
+async def example_chatbot(_):
+    """A simple chatbot using Pydantic-AI agent with GPT-4o-mini.
+
+    An OpenAI API key environment variable *(`OPENAI_API_KEY`)* is required to run this example.
+    """
 
     yield "How can I help you today?"
     messages = []
     while True:
-        user_msg = yield UserInputRequirement(str)
-        messages.append({"role": "user", "content": user_msg})
-        response = await client.chat.completions.create(
-            model="gpt-4o-mini", messages=messages
-        )
-        ai_response = response.choices[0].message.content or ""
-        messages.append({"role": "assistant", "content": ai_response})
-        yield ai_response
+        user_msg = yield pixie.UserInputRequirement(str)
+        response = await agent.run(user_msg, message_history=messages)
+        messages = response.all_messages()
+        yield response.output
