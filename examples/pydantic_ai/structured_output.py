@@ -36,7 +36,7 @@ agent = Agent(model, output_type=MyModel)
 
 
 @pixie.app
-async def structured_output(query: str) -> MyModel:
+async def pydantic_ai_structured_output(query: str) -> MyModel:
     """Extract city and country information from a text query.
 
     Args:
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     import asyncio
 
     async def test():
-        output = await structured_output("The windy city in the US of A.")
+        output = await pydantic_ai_structured_output("The windy city in the US of A.")
         print(output)
 
     asyncio.run(test())

@@ -109,7 +109,7 @@ _question_graph = Graph(
 
 
 @pixie.app
-async def question_graph() -> pixie.PixieGenerator[str, str]:
+async def pydantic_ai_question_graph() -> pixie.PixieGenerator[str, str]:
     """Interactive Q&A game using graph-based state machine.
 
     The AI asks questions, the user answers, and the AI evaluates.
@@ -155,7 +155,7 @@ async def question_graph() -> pixie.PixieGenerator[str, str]:
 # For local testing
 async def test():
     """Test function for local development."""
-    async for message in question_graph(None):
+    async for message in pydantic_ai_question_graph(None):
         if isinstance(message, pixie.InputRequired):
             # Simulate user input for testing
             message = "Paris"  # Assuming a capital question

@@ -68,7 +68,7 @@ SUPERVISOR_PROMPT = (
 
 
 @pixie.app
-async def personal_assistant() -> pixie.PixieGenerator[str, str]:
+async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
     """Multi-agent personal assistant with calendar and email subagents.
 
     The supervisor coordinates specialized worker agents:

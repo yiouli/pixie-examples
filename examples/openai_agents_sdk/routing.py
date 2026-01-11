@@ -43,7 +43,7 @@ triage_agent = Agent(
 
 
 @pixie.app
-async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
+async def openai_multilingual_routing() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent language routing system with streaming responses.
 
@@ -108,7 +108,7 @@ async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
 
 
 @pixie.app
-async def multilingual_routing_simple(
+async def openai_multilingual_routing_simple(
     initial_message: str,
 ) -> pixie.PixieGenerator[str, str]:
     """

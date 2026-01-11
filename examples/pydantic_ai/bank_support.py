@@ -98,7 +98,7 @@ async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
 
 
 @pixie.app
-async def bank_support_agent() -> pixie.PixieGenerator[str, str]:
+async def pydantic_ai_bank_support_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive bank support agent.
 
     This agent helps customers with banking queries, can check balances,
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     import asyncio
 
     async def test():
-        async for response in bank_support_agent(None):
+        async for response in pydantic_ai_bank_support_agent(None):
             print(response)
             if isinstance(response, pixie.InputRequired):
                 # In real usage, Pixie handles this

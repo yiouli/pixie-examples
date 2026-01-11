@@ -244,7 +244,9 @@ async def _verify_report(report: FinancialReportData) -> VerificationResult:
 
 
 @pixie.app
-async def financial_research(query: str) -> pixie.PixieGenerator[str, None]:
+async def openai_agents_financial_research(
+    query: str,
+) -> pixie.PixieGenerator[str, None]:
     """
     Comprehensive financial research agent with multi-step workflow.
 

@@ -49,7 +49,7 @@ evaluator = Agent[None](
 
 
 @pixie.app
-async def llm_as_a_judge(topic: str) -> pixie.PixieGenerator[str, None]:
+async def openai_agents_llm_as_a_judge(topic: str) -> pixie.PixieGenerator[str, None]:
     """
     Generate a story outline using LLM-as-a-judge pattern.
 

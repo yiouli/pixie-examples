@@ -16,7 +16,7 @@ def get_weather(city: str) -> str:
 
 
 @pixie.app
-async def basic_weather_agent(query: str) -> str:
+async def langchain_basic_weather_agent(query: str) -> str:
     """A simple weather agent that can answer questions using tools.
 
     Args:
@@ -43,7 +43,7 @@ async def basic_weather_agent(query: str) -> str:
 
 
 @pixie.app
-async def interactive_weather_agent() -> pixie.PixieGenerator[str, str]:
+async def langchain_interactive_weather_agent() -> pixie.PixieGenerator[str, str]:
     """An interactive weather chatbot that maintains conversation.
 
     This agent can have multi-turn conversations with the user.

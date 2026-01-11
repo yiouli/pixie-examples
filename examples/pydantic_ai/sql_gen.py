@@ -131,7 +131,7 @@ async def validate_output(ctx: RunContext[Deps], output: Response) -> Response:
 
 
 @pixie.app
-async def sql_gen(query: str) -> str:
+async def pydantic_ai_sql_gen(query: str) -> str:
     """SQL generation agent with multi-step workflow and validation.
 
     This example demonstrates:
@@ -172,7 +172,7 @@ async def test():
         print(f"\n{'='*60}")
         print(f"Query: {query}")
         print("=" * 60)
-        result = await sql_gen(query)
+        result = await pydantic_ai_sql_gen(query)
         print(result)
 
 

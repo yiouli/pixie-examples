@@ -21,7 +21,7 @@ from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
 import pixie
-from .sql_utils import SQLDatabase, SQLDatabaseToolkit
+from ..sql_utils import SQLDatabase, SQLDatabaseToolkit
 
 
 # System prompt for SQL agent
@@ -71,7 +71,7 @@ def setup_database():
 
 
 @pixie.app
-async def sql_query_agent(question: str) -> str:
+async def langchain_sql_query_agent(question: str) -> str:
     """SQL database query agent that can answer questions about the Chinook database.
 
     The Chinook database represents a digital media store with tables for artists,
@@ -107,7 +107,7 @@ async def sql_query_agent(question: str) -> str:
 
 
 @pixie.app
-async def interactive_sql_agent() -> pixie.PixieGenerator[str, str]:
+async def langchain_interactive_sql_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive SQL database query agent with multi-turn conversation.
 
     This agent maintains conversation history and can handle follow-up questions.

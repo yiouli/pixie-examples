@@ -173,7 +173,7 @@ usage_limits = UsageLimits(request_limit=15)
 
 
 @pixie.app
-async def flight_booking() -> pixie.PixieGenerator[str, str]:
+async def pydantic_ai_flight_booking() -> pixie.PixieGenerator[str, str]:
     """Multi-agent flight booking with search, extraction, and seat selection.
 
     This example demonstrates:
@@ -253,7 +253,7 @@ async def flight_booking() -> pixie.PixieGenerator[str, str]:
 # For local testing
 async def test():
     """Test function for local development."""
-    async for message in flight_booking(None):
+    async for message in pydantic_ai_flight_booking(None):
         if isinstance(message, pixie.InputRequired):
             # Simulate user input for testing
             if "buy" in str(message):

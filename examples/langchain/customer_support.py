@@ -168,7 +168,7 @@ def apply_step_config(
 
 
 @pixie.app
-async def customer_support() -> pixie.PixieGenerator[str, str]:
+async def langchain_customer_support() -> pixie.PixieGenerator[str, str]:
     """Customer support agent with state machine workflow.
 
     The agent progresses through three stages:

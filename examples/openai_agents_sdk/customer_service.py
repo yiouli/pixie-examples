@@ -193,7 +193,7 @@ seat_booking_agent.handoffs.append(triage_agent)
 
 
 @pixie.app
-async def airline_customer_service() -> pixie.PixieGenerator[str, str]:
+async def openai_agents_airline_customer_service() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent customer service chatbot for an airline.
 

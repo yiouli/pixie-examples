@@ -14,7 +14,7 @@ from typing import Literal
 from langchain.chat_models import init_chat_model
 from langchain.messages import AIMessage
 from langgraph.graph import START, MessagesState, StateGraph
-from .sql_utils import SQLDatabase, SQLDatabaseToolkit
+from ..sql_utils import SQLDatabase, SQLDatabaseToolkit
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import InMemorySaver
 import pixie
