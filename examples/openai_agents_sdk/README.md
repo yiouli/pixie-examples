@@ -205,7 +205,7 @@ Examples use `PixieGenerator[str, str]` with `UserInputRequirement(str)` for int
 
 ```python
 @pixie_app
-async def my_chatbot(_: NoneType) -> PixieGenerator[str, str]:
+async def my_chatbot(_: None) -> PixieGenerator[str, str]:
     yield "Hello! How can I help?"
 
     while True:

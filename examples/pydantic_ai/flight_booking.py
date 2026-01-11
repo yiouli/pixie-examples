@@ -6,7 +6,6 @@ This demonstrates agent delegation and programmatic agent hand-off patterns.
 import datetime
 from dataclasses import dataclass
 from typing import Literal
-from types import NoneType
 
 from pydantic import BaseModel, Field
 from pydantic_ai import (
@@ -174,7 +173,7 @@ usage_limits = UsageLimits(request_limit=15)
 
 
 @pixie_app
-async def flight_booking(_: NoneType) -> PixieGenerator[str, str]:
+async def flight_booking(_: None) -> PixieGenerator[str, str]:
     """Multi-agent flight booking with search, extraction, and seat selection.
 
     This example demonstrates:

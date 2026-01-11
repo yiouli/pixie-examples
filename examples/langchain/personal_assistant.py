@@ -7,7 +7,6 @@ coordinates specialized worker agents (calendar and email agents).
 Based on: https://docs.langchain.com/oss/python/langchain/multi-agent/subagents-personal-assistant
 """
 
-from types import NoneType
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
@@ -69,7 +68,7 @@ SUPERVISOR_PROMPT = (
 
 
 @pixie_app
-async def personal_assistant(_: NoneType) -> PixieGenerator[str, str]:
+async def personal_assistant(_: None) -> PixieGenerator[str, str]:
     """Multi-agent personal assistant with calendar and email subagents.
 
     The supervisor coordinates specialized worker agents:

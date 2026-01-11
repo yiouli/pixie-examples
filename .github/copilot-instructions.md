@@ -55,13 +55,12 @@ The handler function's first parameter defines what input it accepts:
 
 ### Accepting No Input
 
-Use `NoneType` when the application doesn't require input:
+Use `None` when the application doesn't require input:
 
 ```python
-from types import NoneType
 
 @pixie_app
-async def my_app(_: NoneType) -> str:
+async def my_app(_: None) -> str:
     return "No input needed"
 ```
 
@@ -206,7 +205,7 @@ async def weather(query: WeatherQuery) -> str:
 ### Example 2: Multi-Turn Chatbot with User Input
 
 ```python
-from types import NoneType
+from types import None
 from pydantic_ai import Agent, ModelMessage, ModelRequest
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
 
@@ -216,7 +215,7 @@ chatbot = Agent(
 )
 
 @pixie_app
-async def chat_with_ai(_: NoneType) -> PixieGenerator[str, str]:
+async def chat_with_ai(_: None) -> PixieGenerator[str, str]:
     """Interactive chatbot with conversation history."""
     # Enable instrumentation
     Agent.instrument_all()
@@ -463,7 +462,7 @@ else:
 | `bool`      | Boolean input/output      | `enabled: bool`      |
 | `dict`      | Dictionary input/output   | `config: dict`       |
 | `list`      | List input/output         | `items: list[str]`   |
-| `NoneType`  | No input                  | `_: NoneType`        |
+| `None`      | No input                  | `_: None`            |
 | `BaseModel` | Structured Pydantic model | `config: MyConfig`   |
 
 ### Generator Type Syntax

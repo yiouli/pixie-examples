@@ -17,7 +17,6 @@ queries. Make sure database connection permissions are scoped as narrowly as pos
 
 import pathlib
 import requests
-from types import NoneType
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
@@ -108,7 +107,7 @@ async def sql_query_agent(question: str) -> str:
 
 
 @pixie_app
-async def interactive_sql_agent(_: NoneType) -> PixieGenerator[str, str]:
+async def interactive_sql_agent(_: None) -> PixieGenerator[str, str]:
     """Interactive SQL database query agent with multi-turn conversation.
 
     This agent maintains conversation history and can handle follow-up questions.

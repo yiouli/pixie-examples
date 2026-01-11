@@ -11,7 +11,6 @@ Original: https://github.com/openai/openai-agents-python/blob/main/examples/cust
 from __future__ import annotations
 
 import random
-from types import NoneType
 
 from pydantic import BaseModel
 from agents import (
@@ -194,7 +193,7 @@ seat_booking_agent.handoffs.append(triage_agent)
 
 
 @pixie_app
-async def airline_customer_service(_: NoneType) -> PixieGenerator[str, str]:
+async def airline_customer_service(_: None) -> PixieGenerator[str, str]:
     """
     Multi-agent customer service chatbot for an airline.
 

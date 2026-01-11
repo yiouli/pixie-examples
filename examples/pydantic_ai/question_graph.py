@@ -4,7 +4,6 @@ This demonstrates using pydantic_graph for complex control flow.
 """
 
 from dataclasses import dataclass, field
-from types import NoneType
 
 from pydantic import BaseModel
 from pydantic_ai import Agent, ModelMessage, format_as_xml
@@ -110,7 +109,7 @@ _question_graph = Graph(
 
 
 @pixie_app
-async def question_graph(_: NoneType) -> PixieGenerator[str, str]:
+async def question_graph(_: None) -> PixieGenerator[str, str]:
     """Interactive Q&A game using graph-based state machine.
 
     The AI asks questions, the user answers, and the AI evaluates.

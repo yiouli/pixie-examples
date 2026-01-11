@@ -10,7 +10,6 @@ Original: https://github.com/openai/openai-agents-python/blob/main/examples/agen
 
 from __future__ import annotations
 
-from types import NoneType
 
 from openai.types.responses import ResponseContentPartDoneEvent, ResponseTextDeltaEvent
 from agents import Agent, RawResponsesStreamEvent, Runner, TResponseInputItem
@@ -44,7 +43,7 @@ triage_agent = Agent(
 
 
 @pixie_app
-async def multilingual_routing(_: NoneType) -> PixieGenerator[str, str]:
+async def multilingual_routing(_: None) -> PixieGenerator[str, str]:
     """
     Multi-agent language routing system with streaming responses.
 

@@ -7,7 +7,6 @@ as it moves through different states of a workflow.
 Based on: https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs-customer-support
 """
 
-from types import NoneType
 from typing import Literal, NotRequired
 from langchain.agents import create_agent, AgentState
 from langchain.chat_models import init_chat_model
@@ -169,7 +168,7 @@ def apply_step_config(
 
 
 @pixie_app
-async def customer_support(_: NoneType) -> PixieGenerator[str, str]:
+async def customer_support(_: None) -> PixieGenerator[str, str]:
     """Customer support agent with state machine workflow.
 
     The agent progresses through three stages:

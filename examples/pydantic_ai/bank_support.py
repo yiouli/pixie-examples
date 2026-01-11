@@ -21,7 +21,6 @@ Then query via GraphQL:
 
 import sqlite3
 from dataclasses import dataclass
-from types import NoneType
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
@@ -99,7 +98,7 @@ async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
 
 
 @pixie_app
-async def bank_support_agent(_: NoneType) -> PixieGenerator[str, str]:
+async def bank_support_agent(_: None) -> PixieGenerator[str, str]:
     """Interactive bank support agent.
 
     This agent helps customers with banking queries, can check balances,

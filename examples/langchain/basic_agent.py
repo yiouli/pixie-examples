@@ -5,7 +5,6 @@ This example demonstrates a simple agent that can answer questions and call tool
 Based on: https://docs.langchain.com/oss/python/langchain/quickstart
 """
 
-from types import NoneType
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from pixie import pixie_app, PixieGenerator, UserInputRequirement
@@ -44,7 +43,7 @@ async def basic_weather_agent(query: str) -> str:
 
 
 @pixie_app
-async def interactive_weather_agent(_: NoneType) -> PixieGenerator[str, str]:
+async def interactive_weather_agent(_: None) -> PixieGenerator[str, str]:
     """An interactive weather chatbot that maintains conversation.
 
     This agent can have multi-turn conversations with the user.
