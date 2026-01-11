@@ -21,7 +21,7 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
-from pixie import pixie_app
+import pixie
 import requests
 from bs4 import BeautifulSoup
 
@@ -190,7 +190,7 @@ def create_rag_graph(retriever, model):
     return workflow.compile()
 
 
-@pixie_app
+@pixie.pixie_app
 async def langgraph_rag_agent(question: str) -> str:
     """Agentic RAG system that can answer questions about Lilian Weng's blog posts.
 

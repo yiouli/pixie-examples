@@ -27,7 +27,7 @@ from agents import (
     handoff,
 )
 from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 # ============================================================================
@@ -192,8 +192,8 @@ faq_agent.handoffs.append(triage_agent)
 seat_booking_agent.handoffs.append(triage_agent)
 
 
-@pixie_app
-async def airline_customer_service(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def airline_customer_service() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent customer service chatbot for an airline.
 
@@ -219,7 +219,7 @@ async def airline_customer_service(_: None) -> PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_input = yield UserInputRequirement(str)
+        user_input = yield pixie.UserInputRequirement(str)
 
         # Check for exit commands
         if user_input.lower() in {"exit", "quit", "bye"}:

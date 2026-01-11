@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from openai.types.responses import ResponseContentPartDoneEvent, ResponseTextDeltaEvent
 from agents import Agent, RawResponsesStreamEvent, Runner, TResponseInputItem
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 # ============================================================================
@@ -42,8 +42,8 @@ triage_agent = Agent(
 )
 
 
-@pixie_app
-async def multilingual_routing(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def multilingual_routing() -> pixie.PixieGenerator[str, str]:
     """
     Multi-agent language routing system with streaming responses.
 
@@ -66,7 +66,7 @@ async def multilingual_routing(_: None) -> PixieGenerator[str, str]:
 
     while True:
         # Get user message
-        user_msg = yield UserInputRequirement(str)
+        user_msg = yield pixie.UserInputRequirement(str)
 
         # Check for exit
         if user_msg.lower() in {"exit", "quit", "bye"}:
@@ -107,8 +107,10 @@ async def multilingual_routing(_: None) -> PixieGenerator[str, str]:
         yield f"\n[Handled by: {agent_name}]"
 
 
-@pixie_app
-async def multilingual_routing_simple(initial_message: str) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def multilingual_routing_simple(
+    initial_message: str,
+) -> pixie.PixieGenerator[str, str]:
     """
     Simplified multilingual routing with single initial message.
 
@@ -150,7 +152,7 @@ async def multilingual_routing_simple(initial_message: str) -> PixieGenerator[st
     yield "\nContinue the conversation (type 'exit' to quit):"
 
     while True:
-        user_msg = yield UserInputRequirement(str)
+        user_msg = yield pixie.UserInputRequirement(str)
 
         if user_msg.lower() in {"exit", "quit", "bye"}:
             yield "Session ended. Merci! ¡Gracias! Thank you!"

@@ -23,7 +23,7 @@ import sqlite3
 from dataclasses import dataclass
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 @dataclass
@@ -97,8 +97,8 @@ async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
     return f"${balance:.2f}"
 
 
-@pixie_app
-async def bank_support_agent(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def bank_support_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive bank support agent.
 
     This agent helps customers with banking queries, can check balances,
@@ -134,7 +134,7 @@ async def bank_support_agent(_: None) -> PixieGenerator[str, str]:
 
         while True:
             # Get user query
-            user_query = yield UserInputRequirement(str)
+            user_query = yield pixie.UserInputRequirement(str)
 
             # Check for exit commands
             if user_query.lower() in {"exit", "quit", "bye"}:
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     async def test():
         async for response in bank_support_agent(None):
             print(response)
-            if isinstance(response, type(UserInputRequirement(str))):
+            if isinstance(response, pixie.UserInputRequirement):
                 # In real usage, Pixie handles this
                 break
 

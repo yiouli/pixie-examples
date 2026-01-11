@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from agents import Agent, ItemHelpers, Runner, TResponseInputItem
-from pixie import pixie_app, PixieGenerator
+import pixie
 
 
 # Story outline generator agent
@@ -48,8 +48,8 @@ evaluator = Agent[None](
 )
 
 
-@pixie_app
-async def llm_as_a_judge(topic: str) -> PixieGenerator[str, None]:
+@pixie.pixie_app
+async def llm_as_a_judge(topic: str) -> pixie.PixieGenerator[str, None]:
     """
     Generate a story outline using LLM-as-a-judge pattern.
 

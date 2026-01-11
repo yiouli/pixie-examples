@@ -11,7 +11,7 @@ from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 # Define calendar tools (stubs for demonstration)
@@ -67,16 +67,13 @@ SUPERVISOR_PROMPT = (
 )
 
 
-@pixie_app
-async def personal_assistant(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def personal_assistant() -> pixie.PixieGenerator[str, str]:
     """Multi-agent personal assistant with calendar and email subagents.
 
     The supervisor coordinates specialized worker agents:
     - Calendar agent: handles scheduling and availability
     - Email agent: manages communication and drafts
-
-    Args:
-        _: No initial input required
 
     Yields:
         AI responses to user requests
@@ -143,7 +140,7 @@ async def personal_assistant(_: None) -> PixieGenerator[str, str]:
 
     while True:
         # Get user request
-        user_request = yield UserInputRequirement(str)
+        user_request = yield pixie.UserInputRequirement(str)
 
         # Check for exit
         if user_request.lower() in {"exit", "quit", "bye", "goodbye"}:

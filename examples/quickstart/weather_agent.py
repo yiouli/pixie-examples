@@ -6,7 +6,7 @@ from typing import Any
 from httpx import AsyncClient
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import PixieGenerator, UserInputRequirement, pixie_app
+import pixie
 
 
 @dataclass
@@ -77,8 +77,8 @@ async def get_weather(ctx: RunContext[Deps], lat: float, lng: float) -> dict[str
     }
 
 
-@pixie_app
-async def example_weather_agent(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def example_weather_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive weather agent.
 
     This agent interacts with the user to get weather information for a specified location.
@@ -105,6 +105,6 @@ async def example_weather_agent(_: None) -> PixieGenerator[str, str]:
         stop_words = ["exit", "quit", "stop"]
         while user_message not in stop_words:
             yield "What location would you like the weather for?"
-            user_message = yield UserInputRequirement(str)
+            user_message = yield pixie.UserInputRequirement(str)
             result = await agent.run(user_message, deps=deps)
             yield result.output

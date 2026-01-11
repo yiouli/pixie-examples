@@ -15,7 +15,7 @@ from langchain.agents.middleware import wrap_model_call, ModelRequest, ModelResp
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
 from typing import Callable
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 # Define the possible workflow steps
@@ -167,17 +167,14 @@ def apply_step_config(
     return handler(request)
 
 
-@pixie_app
-async def customer_support(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def customer_support() -> pixie.PixieGenerator[str, str]:
     """Customer support agent with state machine workflow.
 
     The agent progresses through three stages:
     1. Warranty verification
     2. Issue classification (hardware/software)
     3. Resolution (solution or escalation)
-
-    Args:
-        _: No initial input required
 
     Yields:
         AI responses guiding the support workflow
@@ -211,7 +208,7 @@ async def customer_support(_: None) -> PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_message = yield UserInputRequirement(str)
+        user_message = yield pixie.UserInputRequirement(str)
 
         # Check for exit
         if user_message.lower() in {"exit", "quit", "bye"}:

@@ -10,7 +10,7 @@ agent = Agent(
 
 
 @pixie.pixie_app
-async def example_chatbot(_):
+async def example_chatbot():
     """A simple chatbot using Pydantic-AI agent with GPT-4o-mini.
 
     An OpenAI API key environment variable *(`OPENAI_API_KEY`)* is required to run this example.

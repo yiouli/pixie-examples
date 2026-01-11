@@ -14,7 +14,7 @@ readme = "README.md"
 python = ">=3.10,<3.14"
 pydantic-ai-slim = "^1.39.0"
 pydantic = {version = "^2.7.4", extras = []}
-pixie-sdk = "^0.2.0"
+pixie-sdk = "^0.2.1"
 openai-agents = "^0.6.5"
 pymarkdownlnt = "^0.9.34"
 langchain = "^1.2.3"

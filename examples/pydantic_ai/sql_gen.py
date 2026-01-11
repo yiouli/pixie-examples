@@ -10,7 +10,7 @@ from typing import Annotated, TypeAlias
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, ModelRetry, RunContext, format_as_xml
-from pixie import pixie_app
+import pixie
 
 
 # Simulated database schema
@@ -130,7 +130,7 @@ async def validate_output(ctx: RunContext[Deps], output: Response) -> Response:
     return output
 
 
-@pixie_app
+@pixie.pixie_app
 async def sql_gen(query: str) -> str:
     """SQL generation agent with multi-step workflow and validation.
 

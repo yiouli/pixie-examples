@@ -20,7 +20,7 @@ Then query via GraphQL:
 import os
 from pydantic import BaseModel
 from pydantic_ai import Agent
-from pixie import pixie_app
+import pixie
 
 
 class MyModel(BaseModel):
@@ -35,7 +35,7 @@ model = os.getenv("PYDANTIC_AI_MODEL", "openai:gpt-4o-mini")
 agent = Agent(model, output_type=MyModel)
 
 
-@pixie_app
+@pixie.pixie_app
 async def structured_output(query: str) -> MyModel:
     """Extract city and country information from a text query.
 

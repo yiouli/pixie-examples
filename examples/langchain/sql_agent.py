@@ -20,7 +20,7 @@ import requests
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 from .sql_utils import SQLDatabase, SQLDatabaseToolkit
 
 
@@ -70,7 +70,7 @@ def setup_database():
     return SQLDatabase.from_uri("sqlite:///Chinook.db")
 
 
-@pixie_app
+@pixie.pixie_app
 async def sql_query_agent(question: str) -> str:
     """SQL database query agent that can answer questions about the Chinook database.
 
@@ -106,14 +106,11 @@ async def sql_query_agent(question: str) -> str:
     return result["messages"][-1].content
 
 
-@pixie_app
-async def interactive_sql_agent(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def interactive_sql_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive SQL database query agent with multi-turn conversation.
 
     This agent maintains conversation history and can handle follow-up questions.
-
-    Args:
-        _: No initial input required
 
     Yields:
         AI responses to database queries
@@ -155,7 +152,7 @@ Ask me any question about the data!"""
 
     while True:
         # Get user question
-        user_question = yield UserInputRequirement(str)
+        user_question = yield pixie.UserInputRequirement(str)
 
         # Check for exit
         if user_question.lower() in {"exit", "quit", "bye"}:

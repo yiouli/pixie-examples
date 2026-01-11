@@ -17,7 +17,7 @@ from langgraph.graph import START, MessagesState, StateGraph
 from .sql_utils import SQLDatabase, SQLDatabaseToolkit
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import InMemorySaver
-from pixie import pixie_app
+import pixie
 
 
 def setup_database():
@@ -166,7 +166,7 @@ You will call the appropriate tool to execute the query after running this check
     return builder.compile(checkpointer=InMemorySaver())
 
 
-@pixie_app
+@pixie.pixie_app
 async def langgraph_sql_agent(question: str) -> str:
     """Custom SQL agent built with LangGraph primitives.
 

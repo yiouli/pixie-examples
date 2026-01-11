@@ -7,7 +7,7 @@ Based on: https://docs.langchain.com/oss/python/langchain/quickstart
 
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 
 def get_weather(city: str) -> str:
@@ -15,7 +15,7 @@ def get_weather(city: str) -> str:
     return f"It's always sunny in {city}!"
 
 
-@pixie_app
+@pixie.pixie_app
 async def basic_weather_agent(query: str) -> str:
     """A simple weather agent that can answer questions using tools.
 
@@ -42,14 +42,11 @@ async def basic_weather_agent(query: str) -> str:
     return result["messages"][-1].content
 
 
-@pixie_app
-async def interactive_weather_agent(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def interactive_weather_agent() -> pixie.PixieGenerator[str, str]:
     """An interactive weather chatbot that maintains conversation.
 
     This agent can have multi-turn conversations with the user.
-
-    Args:
-        _: No initial input required
 
     Yields:
         AI responses to user questions
@@ -72,7 +69,7 @@ async def interactive_weather_agent(_: None) -> PixieGenerator[str, str]:
 
     while True:
         # Get user input
-        user_query = yield UserInputRequirement(str)
+        user_query = yield pixie.UserInputRequirement(str)
 
         # Check for exit commands
         if user_query.lower() in {"exit", "quit", "bye", "goodbye"}:

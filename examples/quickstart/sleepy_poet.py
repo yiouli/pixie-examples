@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIChatModelSettings
 
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 logger = logging.getLogger(__name__)
 
@@ -54,15 +54,13 @@ class HaikuRequest(BaseModel):
     count: int = Field(3, description="Number of haikus to write.")
 
 
-@pixie_app
-async def example_sleepy_poet(_: None) -> PixieGenerator[HaikuRequest, str]:
+@pixie.pixie_app
+async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
     """An interactive agent that writes haikus while taking naps.
 
     This agent accepts a topic and number of haikus to write, then for each haiku,
     it first calls a tool to sleep for a few seconds before composing the haiku.
 
-    Args:
-        _: No input data is required to start the app.
     Yields:
         HaikuRequest: Requirement for user's input for the haiku request.
         str: The generated haikus interleaved with sleep updates.
@@ -75,7 +73,7 @@ async def example_sleepy_poet(_: None) -> PixieGenerator[HaikuRequest, str]:
 
     while True:
         yield "What's your request?"
-        config = yield UserInputRequirement(HaikuRequest)
+        config = yield pixie.UserInputRequirement(HaikuRequest)
 
         async def write_haikus():
             for i in range(0, config.count):

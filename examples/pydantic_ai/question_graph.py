@@ -13,7 +13,7 @@ from pydantic_graph import (
     Graph,
     GraphRunContext,
 )
-from pixie import pixie_app, PixieGenerator, UserInputRequirement
+import pixie
 
 # Agent for asking questions
 ask_agent = Agent("openai:gpt-4o-mini", output_type=str)
@@ -108,8 +108,8 @@ _question_graph = Graph(
 )
 
 
-@pixie_app
-async def question_graph(_: None) -> PixieGenerator[str, str]:
+@pixie.pixie_app
+async def question_graph() -> pixie.PixieGenerator[str, str]:
     """Interactive Q&A game using graph-based state machine.
 
     The AI asks questions, the user answers, and the AI evaluates.
@@ -134,7 +134,7 @@ async def question_graph(_: None) -> PixieGenerator[str, str]:
                 # Ask user for their answer
                 yield f"\n❓ Question: {node.question}"
                 yield "What is your answer?"
-                state.answer = yield UserInputRequirement(str)
+                state.answer = yield pixie.UserInputRequirement(str)
                 # Continue with the user's answer by passing it to the next iteration
                 # The graph will automatically move to Evaluate with this answer
                 continue
@@ -156,7 +156,7 @@ async def question_graph(_: None) -> PixieGenerator[str, str]:
 async def test():
     """Test function for local development."""
     async for message in question_graph(None):
-        if isinstance(message, UserInputRequirement):
+        if isinstance(message, pixie.UserInputRequirement):
             # Simulate user input for testing
             message = "Paris"  # Assuming a capital question
         print(message)
