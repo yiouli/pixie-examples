@@ -248,24 +248,3 @@ async def pydantic_ai_flight_booking() -> pixie.PixieGenerator[str, str]:
                 message_history = agent_result.all_messages(
                     output_tool_return_content="Please suggest another flight"
                 )
-
-
-# For local testing
-async def test():
-    """Test function for local development."""
-    async for message in pydantic_ai_flight_booking(None):
-        if isinstance(message, pixie.InputRequired):
-            # Simulate user input for testing
-            if "buy" in str(message):
-                message = "buy"
-            elif "seat" in str(message):
-                message = "row 1 seat A"
-            else:
-                message = "search"
-        print(message)
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(test())

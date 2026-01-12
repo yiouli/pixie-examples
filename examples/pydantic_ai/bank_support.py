@@ -152,17 +152,3 @@ Card Status: {"🔒 BLOCKED" if output.block_card else "✓ Active"}
 Risk Level: {output.risk}/10
 """
             yield response.strip()
-
-
-if __name__ == "__main__":
-    # For testing locally
-    import asyncio
-
-    async def test():
-        async for response in pydantic_ai_bank_support_agent(None):
-            print(response)
-            if isinstance(response, pixie.InputRequired):
-                # In real usage, Pixie handles this
-                break
-
-    asyncio.run(test())

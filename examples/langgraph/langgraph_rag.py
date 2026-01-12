@@ -233,9 +233,9 @@ async def langgraph_rag_agent(question: str) -> str:
 
     # Run the graph
     result = graph.invoke(
-        {"messages": [{"role": "user", "content": question}]},
+        {"messages": [{"role": "user", "content": question}]},  # type: ignore
         config={"callbacks": [langfuse_handler]},
-    )  # type: ignore
+    )
 
     # Return the final answer
     return result["messages"][-1].content

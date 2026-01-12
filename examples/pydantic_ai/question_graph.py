@@ -150,19 +150,3 @@ async def pydantic_ai_question_graph() -> pixie.PixieGenerator[str, str]:
                 yield f"\n✅ {node.data}"
                 yield "\n🎉 Congratulations! You got it right!"
                 return
-
-
-# For local testing
-async def test():
-    """Test function for local development."""
-    async for message in pydantic_ai_question_graph(None):
-        if isinstance(message, pixie.InputRequired):
-            # Simulate user input for testing
-            message = "Paris"  # Assuming a capital question
-        print(message)
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(test())
