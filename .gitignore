@@ -4,3 +4,6 @@
 
 dist/
 poetry.lock
+
+docs/
+.vscode/
