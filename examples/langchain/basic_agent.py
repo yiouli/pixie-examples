@@ -7,7 +7,12 @@ Based on: https://docs.langchain.com/oss/python/langchain/quickstart
 
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
+
+from langfuse.langchain import CallbackHandler
 import pixie
+
+
+langfuse_handler = CallbackHandler()
 
 
 def get_weather(city: str) -> str:
@@ -36,7 +41,10 @@ async def langchain_basic_weather_agent(query: str) -> str:
     )
 
     # Run the agent
-    result = agent.invoke({"messages": [{"role": "user", "content": query}]})
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": query}]},
+        config={"callbacks": [langfuse_handler]},
+    )
 
     # Return the final response
     return result["messages"][-1].content
@@ -80,7 +88,9 @@ async def langchain_interactive_weather_agent() -> pixie.PixieGenerator[str, str
         messages.append({"role": "user", "content": user_query})
 
         # Run agent with full conversation history
-        result = agent.invoke({"messages": messages})
+        result = agent.invoke(
+            {"messages": messages}, config={"callbacks": [langfuse_handler]}
+        )
 
         # Update history with AI response
         messages = result["messages"]

@@ -20,8 +20,13 @@ import requests
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
+
+from langfuse.langchain import CallbackHandler
 import pixie
 from ..sql_utils import SQLDatabase, SQLDatabaseToolkit
+
+
+langfuse_handler = CallbackHandler()
 
 
 # System prompt for SQL agent
@@ -100,7 +105,10 @@ async def langchain_sql_query_agent(question: str) -> str:
     agent = create_agent(model, tools, system_prompt=system_prompt)
 
     # Run the agent
-    result = agent.invoke({"messages": [{"role": "user", "content": question}]})
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": question}]},
+        config={"callbacks": [langfuse_handler]},
+    )
 
     # Return the final answer
     return result["messages"][-1].content
@@ -148,7 +156,7 @@ Ask me any question about the data!"""
 
     # Initialize conversation
     thread_id = "sql_thread"
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {"configurable": {"thread_id": thread_id}, "callbacks": [langfuse_handler]}
 
     while True:
         # Get user question

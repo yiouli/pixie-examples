@@ -11,7 +11,12 @@ from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
+
+from langfuse.langchain import CallbackHandler
 import pixie
+
+
+langfuse_handler = CallbackHandler()
 
 
 # Define calendar tools (stubs for demonstration)
@@ -104,7 +109,8 @@ async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
         Handles date/time parsing, availability checking, and event creation.
         """
         result = calendar_agent.invoke(
-            {"messages": [{"role": "user", "content": request}]}
+            {"messages": [{"role": "user", "content": request}]},
+            config={"callbacks": [langfuse_handler]},
         )
         return result["messages"][-1].content
 
@@ -116,7 +122,8 @@ async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
         communication. Handles recipient extraction, subject generation, and email composition.
         """
         result = email_agent.invoke(
-            {"messages": [{"role": "user", "content": request}]}
+            {"messages": [{"role": "user", "content": request}]},
+            config={"callbacks": [langfuse_handler]},
         )
         return result["messages"][-1].content
 
@@ -136,7 +143,7 @@ async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
 
     # Initialize conversation
     thread_id = "personal_assistant_thread"
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {"configurable": {"thread_id": thread_id}, "callbacks": [langfuse_handler]}
 
     while True:
         # Get user request

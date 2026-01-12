@@ -17,7 +17,12 @@ from langgraph.graph import START, MessagesState, StateGraph
 from ..sql_utils import SQLDatabase, SQLDatabaseToolkit
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import InMemorySaver
+
+from langfuse.langchain import CallbackHandler
 import pixie
+
+
+langfuse_handler = CallbackHandler()
 
 
 def setup_database():
@@ -73,7 +78,9 @@ def create_sql_graph(db: SQLDatabase, model):
     # Node: Force model to call get_schema
     def call_get_schema(state: MessagesState):
         llm_with_tools = model.bind_tools([get_schema_tool], tool_choice="any")
-        response = llm_with_tools.invoke(state["messages"])
+        response = llm_with_tools.invoke(
+            state["messages"], config={"callbacks": [langfuse_handler]}
+        )
         return {"messages": [response]}
 
     # Node: Generate query
@@ -94,7 +101,10 @@ DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the databa
     def generate_query(state: MessagesState):
         system_message = {"role": "system", "content": generate_query_prompt}
         llm_with_tools = model.bind_tools([run_query_tool])
-        response = llm_with_tools.invoke([system_message] + state["messages"])
+        response = llm_with_tools.invoke(
+            [system_message] + state["messages"],
+            config={"callbacks": [langfuse_handler]},
+        )
         return {"messages": [response]}
 
     # Node: Check query
@@ -129,7 +139,9 @@ You will call the appropriate tool to execute the query after running this check
             # Fallback if no tool calls
             user_message = {"role": "user", "content": "Please check the query"}
         llm_with_tools = model.bind_tools([run_query_tool], tool_choice="any")
-        response = llm_with_tools.invoke([system_message, user_message])
+        response = llm_with_tools.invoke(
+            [system_message, user_message], config={"callbacks": [langfuse_handler]}
+        )
         if isinstance(last_message, AI):
             response.id = last_message.id
         return {"messages": [response]}
@@ -196,7 +208,10 @@ async def langgraph_sql_agent(question: str) -> str:
     # Run the graph
     result = graph.invoke(
         {"messages": [{"role": "user", "content": question}]},  # type: ignore
-        {"configurable": {"thread_id": "langgraph_sql"}},
+        {
+            "configurable": {"thread_id": "langgraph_sql"},
+            "callbacks": [langfuse_handler],
+        },
     )
 
     # Return the final message

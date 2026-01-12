@@ -15,7 +15,12 @@ from langchain.agents.middleware import wrap_model_call, ModelRequest, ModelResp
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
 from typing import Callable
+
+from langfuse.langchain import CallbackHandler
 import pixie
+
+
+langfuse_handler = CallbackHandler()
 
 
 # Define the possible workflow steps
@@ -204,7 +209,7 @@ async def langchain_customer_support() -> pixie.PixieGenerator[str, str]:
 
     # Initialize conversation
     thread_id = "support_thread"
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {"configurable": {"thread_id": thread_id}, "callbacks": [langfuse_handler]}
 
     while True:
         # Get user input

@@ -21,9 +21,14 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+
+from langfuse.langchain import CallbackHandler
 import pixie
 import requests
 from bs4 import BeautifulSoup
+
+
+langfuse_handler = CallbackHandler()
 
 
 def load_web_page(url: str) -> list[Document]:
@@ -84,7 +89,9 @@ def create_rag_graph(retriever, model):
     # Node: Generate query or respond
     def generate_query_or_respond(state: MessagesState):
         """Call the model to generate a response or use retrieval tool."""
-        response = model.bind_tools([retriever_tool]).invoke(state["messages"])
+        response = model.bind_tools([retriever_tool]).invoke(
+            state["messages"], config={"callbacks": [langfuse_handler]}
+        )
         return {"messages": [response]}
 
     # Grade documents schema
@@ -115,7 +122,8 @@ def create_rag_graph(retriever, model):
 
         prompt = GRADE_PROMPT.format(question=question, context=context)
         response = grader_model.with_structured_output(GradeDocuments).invoke(
-            [{"role": "user", "content": prompt}]
+            [{"role": "user", "content": prompt}],
+            config={"callbacks": [langfuse_handler]},
         )
 
         score = response.binary_score  # type: ignore
@@ -139,7 +147,10 @@ def create_rag_graph(retriever, model):
         messages = state["messages"]
         question = messages[0].content
         prompt = REWRITE_PROMPT.format(question=question)
-        response = model.invoke([{"role": "user", "content": prompt}])
+        response = model.invoke(
+            [{"role": "user", "content": prompt}],
+            config={"callbacks": [langfuse_handler]},
+        )
         return {"messages": [HumanMessage(content=response.content)]}
 
     # Node: Generate answer
@@ -157,7 +168,10 @@ def create_rag_graph(retriever, model):
         question = state["messages"][0].content
         context = state["messages"][-1].content
         prompt = GENERATE_PROMPT.format(question=question, context=context)
-        response = model.invoke([{"role": "user", "content": prompt}])
+        response = model.invoke(
+            [{"role": "user", "content": prompt}],
+            config={"callbacks": [langfuse_handler]},
+        )
         return {"messages": [response]}
 
     # Build graph
@@ -218,7 +232,10 @@ async def langgraph_rag_agent(question: str) -> str:
     print(f"Processing question: {question}")
 
     # Run the graph
-    result = graph.invoke({"messages": [{"role": "user", "content": question}]})  # type: ignore
+    result = graph.invoke(
+        {"messages": [{"role": "user", "content": question}]},
+        config={"callbacks": [langfuse_handler]},
+    )  # type: ignore
 
     # Return the final answer
     return result["messages"][-1].content
