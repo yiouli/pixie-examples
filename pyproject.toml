@@ -4,7 +4,7 @@ packages = [
     { include = "examples" }
 ]
 
-version = "0.0.1"
+version = "0.0.0"  # Managed by setuptools-scm
 description = "examples for using Pixie"
 authors = ["Yiou Li <yol@gopixie.ai>"]
 license = "MIT"
@@ -32,5 +32,8 @@ openinference-instrumentation-dspy = "^0.1.33"
 numpy = "^2.4.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "setuptools-scm>=8.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools_scm]
+write_to = "examples/_version.py"
