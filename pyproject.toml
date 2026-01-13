@@ -10,6 +10,13 @@ authors = ["Yiou Li <yol@gopixie.ai>"]
 license = "MIT"
 readme = "README.md"
 
+[tool.poetry.urls]
+Homepage = "https://gopixie.ai/?url=https%3A%2F%2Fdemo.yiouli.us%2Fgraphql"
+Repository = "https://github.com/yiouli/pixie-examples"
+Documentation = "https://yiouli.github.io/pixie-sdk-py/"
+Issues = "https://github.com/yiouli/pixie-examples/issues"
+Changelog = "https://github.com/yiouli/pixie-examples/commits/main/"
+
 [tool.poetry.dependencies]
 python = ">=3.11,<3.14"
 pydantic-ai-slim = "^1.39.0"
