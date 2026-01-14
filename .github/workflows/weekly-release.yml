@@ -1,46 +1,46 @@
-name: Daily Release and Publish
+name: Weekly Release and Publish
 on:
   schedule:
-    # Run at 3:00 AM UTC every day
-    - cron: '0 3 * * *'
-  workflow_dispatch:  # Allow manual triggering
+    # Run at 3:00 AM UTC every week on Sunday
+    - cron: "0 3 * * 0"
+  workflow_dispatch: # Allow manual triggering
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required for creating tags
-      id-token: write  # Required for trusted publishing
+      contents: write # Required for creating tags
+      id-token: write # Required for trusted publishing
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for setuptools-scm to work properly
+          fetch-depth: 0 # Required for setuptools-scm to work properly
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      
+          python-version: "3.12"
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
           version: latest
           virtualenvs-create: true
           virtualenvs-in-project: true
-      
+
       - name: Check latest pixie-sdk version
         id: pixie-version
         run: |
           LATEST_VERSION=$(curl -s https://pypi.org/pypi/pixie-sdk/json | jq -r '.info.version')
           echo "Latest pixie-sdk version: $LATEST_VERSION"
           echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
-      
+
       - name: Update pixie-sdk dependency
         run: |
           echo "Updating pixie-sdk to version ${{ steps.pixie-version.outputs.latest }}"
           poetry add "pixie-sdk@^${{ steps.pixie-version.outputs.latest }}"
-      
+
       - name: Check for changes and commit
         id: changes
         run: |
@@ -56,11 +56,11 @@ jobs:
             git push
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Install dependencies
         run: |
           poetry install --only main --no-interaction
-      
+
       - name: Generate version with setuptools-scm
         id: version
         run: |
@@ -72,16 +72,16 @@ jobs:
           echo "Clean version for PyPI: $CLEAN_VERSION"
           echo "version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
           echo "full_version=$VERSION" >> $GITHUB_OUTPUT
-      
+
       - name: Update Poetry version
         run: |
           poetry version ${{ steps.version.outputs.version }}
           echo "Updated pyproject.toml version to: ${{ steps.version.outputs.version }}"
-      
+
       - name: Build package
         run: |
           poetry build
-      
+
       - name: Publish to PyPI
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
