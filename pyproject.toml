@@ -21,7 +21,7 @@ Changelog = "https://github.com/yiouli/pixie-examples/commits/main/"
 python = ">=3.11,<3.14"
 pydantic-ai-slim = "^1.39.0"
 pydantic = {version = "^2.7.4", extras = []}
-pixie-sdk = "^0.1.1.dev8"
+pixie-sdk = "^0.1.1.dev13"
 openai-agents = "^0.6.5"
 pymarkdownlnt = "^0.9.34"
 langchain = "^1.2.3"
