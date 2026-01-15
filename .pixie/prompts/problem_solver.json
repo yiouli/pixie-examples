@@ -1,0 +1,21 @@
+{
+  "versions": {
+    "v0": "You are a smart problem solver.",
+    "v1": "You are a smart problem solver. Let's think step by step."
+  },
+  "defaultVersionId": "v1",
+  "variablesSchema": {
+    "properties": {
+      "problem_description": {
+        "description": "A description of the problem to be solved.",
+        "title": "Problem Description",
+        "type": "string"
+      }
+    },
+    "required": [
+      "problem_description"
+    ],
+    "title": "PromptVariables",
+    "type": "object"
+  }
+}
