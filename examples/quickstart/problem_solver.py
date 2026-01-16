@@ -14,7 +14,7 @@ agent_prompt = pixie.create_prompt("problem_solver", PromptVariables)
 
 
 @pixie.app
-async def example_chatbot(problem_description: str):
+async def example_problem_solver(problem_description: str):
     """A problem solving agent that thinks and solves complex problems.
 
     This agent utilizes pixie's prompt libraries so you can do prompt optimization within the UI.
