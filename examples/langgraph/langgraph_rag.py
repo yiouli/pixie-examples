@@ -11,7 +11,7 @@ Based on: https://docs.langchain.com/oss/python/langgraph/agentic-rag
 """
 
 from pydantic import BaseModel, Field
-from typing import Literal
+from typing import Literal, cast
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
 from langchain.messages import HumanMessage
@@ -129,8 +129,8 @@ def create_rag_graph(retriever, model):
         state: MessagesState,
     ) -> Literal["generate_answer", "rewrite_question"]:
         """Determine whether the retrieved documents are relevant to the question."""
-        question = state["messages"][0].content
-        context = state["messages"][-1].content
+        question = cast(str, state["messages"][0].content)
+        context = cast(str, state["messages"][-1].content)
 
         prompt = rag_grade_prompt.compile(
             GradePromptVariables(question=question, context=context)
@@ -150,7 +150,7 @@ def create_rag_graph(retriever, model):
     def rewrite_question(state: MessagesState):
         """Rewrite the original user question."""
         messages = state["messages"]
-        question = messages[0].content
+        question = cast(str, messages[0].content)
         prompt = rag_rewrite_prompt.compile(RewritePromptVariables(question=question))
         response = model.invoke(
             [{"role": "user", "content": prompt}],
@@ -161,8 +161,8 @@ def create_rag_graph(retriever, model):
     # Node: Generate answer
     def generate_answer(state: MessagesState):
         """Generate an answer."""
-        question = state["messages"][0].content
-        context = state["messages"][-1].content
+        question = cast(str, state["messages"][0].content)
+        context = cast(str, state["messages"][-1].content)
         prompt = rag_generate_prompt.compile(
             GeneratePromptVariables(question=question, context=context)
         )

@@ -16,22 +16,31 @@ from pydantic_graph import (
 import pixie
 
 
+class EvaluationOutput(BaseModel, use_attribute_docstrings=True):
+    correct: bool
+    """Whether the answer is correct."""
+    comment: str
+    """Comment on the answer, reprimand the user if the answer is wrong."""
+
+
 ask_agent_prompt = pixie.create_prompt("question_ask_agent")
 evaluate_agent_prompt = pixie.create_prompt("question_evaluate_agent")
 
 # Agents will be initialized lazily inside the app handler
-ask_agent: Agent | None = None
-evaluate_agent: Agent | None = None
+ask_agent: Agent
+evaluate_agent: Agent[None, EvaluationOutput]
 
 
 def get_ask_agent() -> Agent:
     global ask_agent
     if ask_agent is None:
-        ask_agent = Agent("openai:gpt-4o-mini", output_type=str)
+        ask_agent = Agent(
+            "openai:gpt-4o-mini", system_prompt=ask_agent_prompt.compile()
+        )
     return ask_agent
 
 
-def get_evaluate_agent() -> Agent:
+def get_evaluate_agent() -> Agent[None, EvaluationOutput]:
     global evaluate_agent
     if evaluate_agent is None:
         evaluate_agent = Agent(
@@ -75,13 +84,6 @@ class Answer(BaseNode[QuestionState]):
         if ctx.state.answer is None:
             raise ValueError("Answer need to be set after Ask() node in the main loop.")
         return Evaluate(ctx.state.answer)
-
-
-class EvaluationOutput(BaseModel, use_attribute_docstrings=True):
-    correct: bool
-    """Whether the answer is correct."""
-    comment: str
-    """Comment on the answer, reprimand the user if the answer is wrong."""
 
 
 @dataclass

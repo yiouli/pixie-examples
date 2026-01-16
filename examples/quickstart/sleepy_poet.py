@@ -22,38 +22,6 @@ class PoetDeps:
     time_to_write: bool = False
 
 
-# Agent will be lazily initialized
-_poet: Agent | None = None
-
-
-def get_poet() -> Agent:
-    global _poet
-    if _poet is None:
-        _poet = Agent(
-            "openai:gpt-4o-mini",
-            system_prompt=sleepy_poet_prompt.compile(),
-            deps_type=PoetDeps,
-            model_settings=OpenAIChatModelSettings(
-                parallel_tool_calls=False  # Ensure single sleep tool call per turn
-            ),
-        )
-
-        @_poet.tool
-        async def sleep_for_a_bit(ctx: RunContext[PoetDeps]) -> str:
-            """Sleep for 5 seconds before writing a haiku."""
-            if ctx.deps.time_to_write:
-                return "I've already napped, It's time to write the haiku now."
-
-            await ctx.deps.queue.put("Let me take a nap...")
-            for i in range(3):
-                await asyncio.sleep(1)
-                await ctx.deps.queue.put("z" * (i + 1))
-            ctx.deps.time_to_write = True
-            return "Poet napped for 3 seconds."
-
-    return _poet
-
-
 class HaikuRequest(BaseModel):
     """Input config for sleepy haiku agent."""
 
@@ -73,6 +41,28 @@ async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
         str: The generated haikus interleaved with sleep updates.
     """
 
+    poet = Agent(
+        "openai:gpt-4o-mini",
+        system_prompt=sleepy_poet_prompt.compile(),
+        deps_type=PoetDeps,
+        model_settings=OpenAIChatModelSettings(
+            parallel_tool_calls=False  # Ensure single sleep tool call per turn
+        ),
+    )
+
+    @poet.tool
+    async def sleep_for_a_bit(ctx: RunContext[PoetDeps]) -> str:
+        """Sleep for 5 seconds before writing a haiku."""
+        if ctx.deps.time_to_write:
+            return "I've already napped, It's time to write the haiku now."
+
+        await ctx.deps.queue.put("Let me take a nap...")
+        for i in range(3):
+            await asyncio.sleep(1)
+            await ctx.deps.queue.put("z" * (i + 1))
+        ctx.deps.time_to_write = True
+        return "Poet napped for 3 seconds."
+
     q = asyncio.Queue[str | None]()
     deps = PoetDeps(queue=q)
 
@@ -83,7 +73,6 @@ async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
         config = yield pixie.InputRequired(HaikuRequest)
 
         async def write_haikus():
-            poet = get_poet()
             for i in range(0, config.count):
                 result = await poet.run(config.topic, deps=deps)
                 await q.put(f"### Haiku #{i+1}\n{result.output}\n")

@@ -25,7 +25,7 @@ async def example_problem_solver(problem_description: str):
 
     agent = Agent(
         name=agent_prompt.id,
-        instructions=await agent_prompt.compile(
+        instructions=agent_prompt.compile(
             PromptVariables(problem_description=problem_description)
         ),
         model="gpt-4o-mini",

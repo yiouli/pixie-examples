@@ -59,7 +59,7 @@ async def main():
     for prompt in found_prompts:
         try:
             content = prompts[prompt.id]
-            await prompt.append_version("v0", content, set_as_default=True)
+            prompt.append_version("v0", content, set_as_default=True)
             print(f"Created prompt: {prompt.id}")
             created_count += 1
         except Exception as e:
