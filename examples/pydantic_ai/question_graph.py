@@ -15,8 +15,31 @@ from pydantic_graph import (
 )
 import pixie
 
-# Agent for asking questions
-ask_agent = Agent("openai:gpt-4o-mini", output_type=str)
+
+ask_agent_prompt = pixie.create_prompt("question_ask_agent")
+evaluate_agent_prompt = pixie.create_prompt("question_evaluate_agent")
+
+# Agents will be initialized lazily inside the app handler
+ask_agent: Agent | None = None
+evaluate_agent: Agent | None = None
+
+
+def get_ask_agent() -> Agent:
+    global ask_agent
+    if ask_agent is None:
+        ask_agent = Agent("openai:gpt-4o-mini", output_type=str)
+    return ask_agent
+
+
+def get_evaluate_agent() -> Agent:
+    global evaluate_agent
+    if evaluate_agent is None:
+        evaluate_agent = Agent(
+            "openai:gpt-4o-mini",
+            output_type=EvaluationOutput,
+            system_prompt=evaluate_agent_prompt.compile(),
+        )
+    return evaluate_agent
 
 
 @dataclass
@@ -32,7 +55,7 @@ class Ask(BaseNode[QuestionState]):
     """Generate a question using the AI."""
 
     async def run(self, ctx: GraphRunContext[QuestionState]) -> "Answer":
-        agent_result = await ask_agent.run(
+        agent_result = await get_ask_agent().run(
             "Ask a simple question with a single correct answer.",
             message_history=ctx.state.ask_agent_messages,
         )
@@ -61,14 +84,6 @@ class EvaluationOutput(BaseModel, use_attribute_docstrings=True):
     """Comment on the answer, reprimand the user if the answer is wrong."""
 
 
-# Agent for evaluating answers
-evaluate_agent = Agent(
-    "openai:gpt-4o-mini",
-    output_type=EvaluationOutput,
-    system_prompt="Given a question and answer, evaluate if the answer is correct.",
-)
-
-
 @dataclass
 class Evaluate(BaseNode[QuestionState, None, str]):
     """Evaluate the user's answer."""
@@ -80,7 +95,7 @@ class Evaluate(BaseNode[QuestionState, None, str]):
         ctx: GraphRunContext[QuestionState],
     ) -> End[str] | "Reprimand":
         assert ctx.state.question is not None
-        agent_result = await evaluate_agent.run(
+        agent_result = await get_evaluate_agent().run(
             format_as_xml({"question": ctx.state.question, "answer": self.answer}),
             message_history=ctx.state.evaluate_agent_messages,
         )

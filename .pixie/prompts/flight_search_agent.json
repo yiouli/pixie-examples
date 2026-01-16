@@ -1,0 +1,10 @@
+{
+  "versions": {
+    "v0": "Your job is to find the cheapest flight for the user on the given date."
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}

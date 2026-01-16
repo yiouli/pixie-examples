@@ -16,6 +16,10 @@ from langfuse.langchain import CallbackHandler
 import pixie
 
 
+calendar_agent_prompt = pixie.create_prompt("calendar_agent")
+email_agent_prompt = pixie.create_prompt("email_agent")
+supervisor_agent_prompt = pixie.create_prompt("supervisor_agent")
+
 langfuse_handler = CallbackHandler()
 
 
@@ -46,32 +50,6 @@ def send_email(to: list[str], subject: str, body: str, cc: list[str] = []) -> st
     return f"Email sent to {', '.join(to)} - Subject: {subject}"
 
 
-# System prompts for specialized agents
-CALENDAR_AGENT_PROMPT = (
-    "You are a calendar scheduling assistant. "
-    "Parse natural language scheduling requests (e.g., 'next Tuesday at 2pm') "
-    "into proper ISO datetime formats. "
-    "Use get_available_time_slots to check availability when needed. "
-    "Use create_calendar_event to schedule events. "
-    "Always confirm what was scheduled in your final response."
-)
-
-EMAIL_AGENT_PROMPT = (
-    "You are an email assistant. "
-    "Compose professional emails based on natural language requests. "
-    "Extract recipient information and craft appropriate subject lines and body text. "
-    "Use send_email to send the message. "
-    "Always confirm what was sent in your final response."
-)
-
-SUPERVISOR_PROMPT = (
-    "You are a helpful personal assistant. "
-    "You can schedule calendar events and send emails. "
-    "Break down user requests into appropriate tool calls and coordinate the results. "
-    "When a request involves multiple actions, use multiple tools in sequence."
-)
-
-
 @pixie.app
 async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
     """Multi-agent personal assistant with calendar and email subagents.
@@ -90,14 +68,14 @@ async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
     calendar_agent = create_agent(
         model,
         tools=[create_calendar_event, get_available_time_slots],
-        system_prompt=CALENDAR_AGENT_PROMPT,
+        system_prompt=calendar_agent_prompt.compile(),
     )
 
     # Create email subagent
     email_agent = create_agent(
         model,
         tools=[send_email],
-        system_prompt=EMAIL_AGENT_PROMPT,
+        system_prompt=email_agent_prompt.compile(),
     )
 
     # Wrap subagents as tools for the supervisor
@@ -131,7 +109,7 @@ async def langchain_personal_assistant() -> pixie.PixieGenerator[str, str]:
     supervisor_agent = create_agent(
         model,
         tools=[schedule_event, manage_email],
-        system_prompt=SUPERVISOR_PROMPT,
+        system_prompt=supervisor_agent_prompt.compile(),
         checkpointer=InMemorySaver(),
     )
 

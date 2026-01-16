@@ -7,7 +7,7 @@ as it moves through different states of a workflow.
 Based on: https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs-customer-support
 """
 
-from typing import Literal, NotRequired
+from typing import Literal, NotRequired, cast
 from langchain.agents import create_agent, AgentState
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool, ToolRuntime
@@ -17,6 +17,9 @@ from langgraph.types import Command
 from typing import Callable
 
 from langfuse.langchain import CallbackHandler
+from langchain_core.messages import (
+    SystemMessage,
+)
 import pixie
 
 
@@ -90,54 +93,37 @@ def provide_solution(solution: str) -> str:
     return f"Solution provided: {solution}"
 
 
-# Step prompts
-WARRANTY_COLLECTOR_PROMPT = """You are a customer support agent collecting warranty information.
+class IssueClassifierPromptVariables(pixie.PromptVariables):
+    warranty_status: Literal["in_warranty", "out_of_warranty"]
 
-CURRENT STAGE: Warranty Verification
 
-Ask the customer if their device is under warranty. Once you have this information,
-use the record_warranty_status tool to record it and move to the next step.
+class ResolutionSpecialistPromptVariables(IssueClassifierPromptVariables):
+    issue_type: Literal["hardware", "software"]
 
-Be polite and professional."""
 
-ISSUE_CLASSIFIER_PROMPT = """You are a customer support agent classifying technical issues.
-
-CURRENT STAGE: Issue Classification
-CUSTOMER INFO: Warranty status is {warranty_status}
-
-Ask the customer to describe their issue, then determine if it's:
-- HARDWARE: Physical problems (cracked screen, battery, ports, buttons)
-- SOFTWARE: App crashes, performance, settings, updates
-
-Use record_issue_type to record the classification and move to resolution."""
-
-RESOLUTION_SPECIALIST_PROMPT = """You are a customer support agent helping with device issues.
-
-CURRENT STAGE: Resolution
-CUSTOMER INFO: Warranty status is {warranty_status}, issue type is {issue_type}
-
-At this step, you need to:
-1. For SOFTWARE issues: provide troubleshooting steps using provide_solution
-2. For HARDWARE issues:
-   - If IN WARRANTY: explain warranty repair process using provide_solution
-   - If OUT OF WARRANTY: escalate_to_human for paid repair options
-
-Be specific and helpful in your solutions."""
-
+warranty_collector_prompt = pixie.create_prompt("warranty_collector_agent")
+issue_classifier_prompt = pixie.create_prompt(
+    "issue_classifier_agent",
+    IssueClassifierPromptVariables,
+)
+resolution_specialist_prompt = pixie.create_prompt(
+    "resolution_specialist_agent",
+    ResolutionSpecialistPromptVariables,
+)
 # Step configuration
 STEP_CONFIG = {
     "warranty_collector": {
-        "prompt": WARRANTY_COLLECTOR_PROMPT,
+        "prompt": warranty_collector_prompt,
         "tools": [record_warranty_status],
         "requires": [],
     },
     "issue_classifier": {
-        "prompt": ISSUE_CLASSIFIER_PROMPT,
+        "prompt": issue_classifier_prompt,
         "tools": [record_issue_type],
         "requires": ["warranty_status"],
     },
     "resolution_specialist": {
-        "prompt": RESOLUTION_SPECIALIST_PROMPT,
+        "prompt": resolution_specialist_prompt,
         "tools": [provide_solution, escalate_to_human],
         "requires": ["warranty_status", "issue_type"],
     },
@@ -165,7 +151,14 @@ def apply_step_config(
     # Note: In a production implementation, you would inject the formatted prompt
     # and tools into the request. For simplicity, we'll let the handler process
     # the request and handle tool selection based on state.
-    _ = stage_config["prompt"].format(**request.state)
+    prompt = cast(pixie.Prompt, stage_config["prompt"])
+    if prompt.variables_definition:
+        vars = prompt.variables_definition(**request.state)
+        prompt_txt = prompt.compile(vars)
+    else:
+        prompt_txt = prompt.compile(None)
+
+    request.system_message = SystemMessage(prompt_txt)
 
     # The middleware pattern here would need deeper integration with LangChain's
     # internal APIs. For now, we pass through to the handler.

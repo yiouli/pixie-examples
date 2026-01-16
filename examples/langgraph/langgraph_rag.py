@@ -28,6 +28,26 @@ import requests
 from bs4 import BeautifulSoup
 
 
+class GradePromptVariables(pixie.PromptVariables):
+    context: str
+    question: str
+
+
+class RewritePromptVariables(pixie.PromptVariables):
+    question: str
+
+
+class GeneratePromptVariables(pixie.PromptVariables):
+    question: str
+    context: str
+
+
+rag_grade_prompt = pixie.create_prompt("rag_grade_documents", GradePromptVariables)
+rag_rewrite_prompt = pixie.create_prompt("rag_rewrite_question", RewritePromptVariables)
+rag_generate_prompt = pixie.create_prompt(
+    "rag_generate_answer", GeneratePromptVariables
+)
+
 langfuse_handler = CallbackHandler()
 
 
@@ -102,14 +122,6 @@ def create_rag_graph(retriever, model):
             description="Relevance score: 'yes' if relevant, or 'no' if not relevant"
         )
 
-    GRADE_PROMPT = (
-        "You are a grader assessing relevance of a retrieved document to a user question. \n "
-        "Here is the retrieved document: \n\n {context} \n\n"
-        "Here is the user question: {question} \n"
-        "If the document contains keyword(s) or semantic meaning related to the user question, grade it as relevant. \n"
-        "Give a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question."
-    )
-
     grader_model = init_chat_model("gpt-4o", temperature=0)
 
     # Conditional edge: Grade documents
@@ -120,7 +132,9 @@ def create_rag_graph(retriever, model):
         question = state["messages"][0].content
         context = state["messages"][-1].content
 
-        prompt = GRADE_PROMPT.format(question=question, context=context)
+        prompt = rag_grade_prompt.compile(
+            GradePromptVariables(question=question, context=context)
+        )
         response = grader_model.with_structured_output(GradeDocuments).invoke(
             [{"role": "user", "content": prompt}],
             config={"callbacks": [langfuse_handler]},
@@ -133,20 +147,11 @@ def create_rag_graph(retriever, model):
             return "rewrite_question"
 
     # Node: Rewrite question
-    REWRITE_PROMPT = (
-        "Look at the input and try to reason about the underlying semantic intent / meaning.\n"
-        "Here is the initial question:"
-        "\n ------- \n"
-        "{question}"
-        "\n ------- \n"
-        "Formulate an improved question:"
-    )
-
     def rewrite_question(state: MessagesState):
         """Rewrite the original user question."""
         messages = state["messages"]
         question = messages[0].content
-        prompt = REWRITE_PROMPT.format(question=question)
+        prompt = rag_rewrite_prompt.compile(RewritePromptVariables(question=question))
         response = model.invoke(
             [{"role": "user", "content": prompt}],
             config={"callbacks": [langfuse_handler]},
@@ -154,20 +159,13 @@ def create_rag_graph(retriever, model):
         return {"messages": [HumanMessage(content=response.content)]}
 
     # Node: Generate answer
-    GENERATE_PROMPT = (
-        "You are an assistant for question-answering tasks. "
-        "Use the following pieces of retrieved context to answer the question. "
-        "If you don't know the answer, just say that you don't know. "
-        "Use three sentences maximum and keep the answer concise.\n"
-        "Question: {question} \n"
-        "Context: {context}"
-    )
-
     def generate_answer(state: MessagesState):
         """Generate an answer."""
         question = state["messages"][0].content
         context = state["messages"][-1].content
-        prompt = GENERATE_PROMPT.format(question=question, context=context)
+        prompt = rag_generate_prompt.compile(
+            GeneratePromptVariables(question=question, context=context)
+        )
         response = model.invoke(
             [{"role": "user", "content": prompt}],
             config={"callbacks": [langfuse_handler]},

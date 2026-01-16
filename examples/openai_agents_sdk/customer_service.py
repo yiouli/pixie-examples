@@ -26,8 +26,12 @@ from agents import (
     function_tool,
     handoff,
 )
-from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
 import pixie
+
+
+faq_agent_prompt = pixie.create_prompt("airline_faq_agent")
+seat_booking_agent_prompt = pixie.create_prompt("airline_seat_booking_agent")
+triage_agent_prompt = pixie.create_prompt("airline_triage_agent")
 
 
 # ============================================================================
@@ -134,62 +138,58 @@ async def on_seat_booking_handoff(
 
 
 # ============================================================================
-# AGENTS
+# AGENTS (Lazy initialization to avoid compile() at module import time)
 # ============================================================================
 
-faq_agent = Agent[AirlineAgentContext](
-    name="FAQ Agent",
-    handoff_description="A helpful agent that can answer questions about the airline.",
-    instructions=f"""{RECOMMENDED_PROMPT_PREFIX}
+_faq_agent: Agent[AirlineAgentContext] | None = None
+_seat_booking_agent: Agent[AirlineAgentContext] | None = None
+_triage_agent: Agent[AirlineAgentContext] | None = None
+_agents_initialized: bool = False
 
-    You are an FAQ agent. If you are speaking to a customer, you probably were
-    transferred to from the triage agent.
 
-    Use the following routine to support the customer.
+def _initialize_agents() -> None:
+    """Initialize all agents with proper handoffs."""
+    global _faq_agent, _seat_booking_agent, _triage_agent, _agents_initialized
 
-    # Routine
-    1. Identify the last question asked by the customer.
-    2. Use the faq lookup tool to answer the question. Do not rely on your own knowledge.
-    3. If you cannot answer the question, transfer back to the triage agent.""",
-    tools=[faq_lookup_tool],
-)
+    if _agents_initialized:
+        return
 
-seat_booking_agent = Agent[AirlineAgentContext](
-    name="Seat Booking Agent",
-    handoff_description="A helpful agent that can update a seat on a flight.",
-    instructions=f"""{RECOMMENDED_PROMPT_PREFIX}
+    _faq_agent = Agent[AirlineAgentContext](
+        name="FAQ Agent",
+        handoff_description="A helpful agent that can answer questions about the airline.",
+        instructions=faq_agent_prompt.compile(),
+        tools=[faq_lookup_tool],
+    )
 
-    You are a seat booking agent. If you are speaking to a customer, you probably were
-    transferred to from the triage agent.
+    _seat_booking_agent = Agent[AirlineAgentContext](
+        name="Seat Booking Agent",
+        handoff_description="A helpful agent that can update a seat on a flight.",
+        instructions=seat_booking_agent_prompt.compile(),
+        tools=[update_seat],
+    )
 
-    Use the following routine to support the customer.
+    _triage_agent = Agent[AirlineAgentContext](
+        name="Triage Agent",
+        handoff_description="A triage agent that can delegate a customer's request to the appropriate agent.",
+        instructions=triage_agent_prompt.compile(),
+        handoffs=[
+            _faq_agent,
+            handoff(agent=_seat_booking_agent, on_handoff=on_seat_booking_handoff),
+        ],
+    )
 
-    # Routine
-    1. Ask for their confirmation number.
-    2. Ask the customer what their desired seat number is.
-    3. Use the update seat tool to update the seat on the flight.
+    # Set up bidirectional handoffs
+    _faq_agent.handoffs.append(_triage_agent)
+    _seat_booking_agent.handoffs.append(_triage_agent)
 
-    If the customer asks a question that is not related to the routine, transfer back to the
-    triage agent.""",
-    tools=[update_seat],
-)
+    _agents_initialized = True
 
-triage_agent = Agent[AirlineAgentContext](
-    name="Triage Agent",
-    handoff_description="A triage agent that can delegate a customer's request to the appropriate agent.",
-    instructions=(
-        f"{RECOMMENDED_PROMPT_PREFIX} "
-        "You are a helpful triaging agent. You can use your tools to delegate questions to other appropriate agents."
-    ),
-    handoffs=[
-        faq_agent,
-        handoff(agent=seat_booking_agent, on_handoff=on_seat_booking_handoff),
-    ],
-)
 
-# Set up bidirectional handoffs
-faq_agent.handoffs.append(triage_agent)
-seat_booking_agent.handoffs.append(triage_agent)
+def get_triage_agent() -> Agent[AirlineAgentContext]:
+    """Get the triage agent (entry point)."""
+    _initialize_agents()
+    assert _triage_agent is not None
+    return _triage_agent
 
 
 @pixie.app
@@ -210,7 +210,7 @@ async def openai_agents_airline_customer_service() -> pixie.PixieGenerator[str, 
     Receives:
         User messages via InputRequired
     """
-    current_agent: Agent[AirlineAgentContext] = triage_agent
+    current_agent: Agent[AirlineAgentContext] = get_triage_agent()
     input_items: list[TResponseInputItem] = []
     context = AirlineAgentContext()
 

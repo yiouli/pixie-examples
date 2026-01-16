@@ -19,6 +19,11 @@ from pydantic_ai import (
 import pixie
 
 
+flight_search_agent_prompt = pixie.create_prompt("flight_search_agent")
+flight_extraction_agent_prompt = pixie.create_prompt("flight_extraction_agent")
+seat_preference_agent_prompt = pixie.create_prompt("seat_preference_agent")
+
+
 class FlightDetails(BaseModel):
     """Details of the most suitable flight."""
 
@@ -41,59 +46,6 @@ class Deps:
     req_date: datetime.date
 
 
-# This agent is responsible for controlling the flow of the conversation.
-search_agent = Agent[Deps, FlightDetails | NoFlightFound](
-    "openai:gpt-4o-mini",
-    output_type=FlightDetails | NoFlightFound,  # type: ignore
-    retries=4,
-    system_prompt=(
-        "Your job is to find the cheapest flight for the user on the given date. "
-    ),
-)
-
-
-# This agent is responsible for extracting flight details from web page text.
-extraction_agent = Agent(
-    "openai:gpt-4o-mini",
-    output_type=list[FlightDetails],
-    system_prompt="Extract all the flight details from the given text.",
-)
-
-
-@search_agent.tool
-async def extract_flights(ctx: RunContext[Deps]) -> list[FlightDetails]:
-    """Get details of all flights."""
-    # we pass the usage to the search agent so requests within this agent are counted
-    agent_result = await extraction_agent.run(ctx.deps.web_page_text, usage=ctx.usage)
-    return agent_result.output
-
-
-@search_agent.output_validator
-async def validate_output(
-    ctx: RunContext[Deps], output: FlightDetails | NoFlightFound
-) -> FlightDetails | NoFlightFound:
-    """Procedural validation that the flight meets the constraints."""
-    if isinstance(output, NoFlightFound):
-        return output
-
-    errors: list[str] = []
-    if output.origin != ctx.deps.req_origin:
-        errors.append(
-            f"Flight should have origin {ctx.deps.req_origin}, not {output.origin}"
-        )
-    if output.destination != ctx.deps.req_destination:
-        errors.append(
-            f"Flight should have destination {ctx.deps.req_destination}, not {output.destination}"
-        )
-    if output.date != ctx.deps.req_date:
-        errors.append(f"Flight should be on {ctx.deps.req_date}, not {output.date}")
-
-    if errors:
-        raise ModelRetry("\n".join(errors))
-    else:
-        return output
-
-
 class SeatPreference(BaseModel):
     row: int = Field(ge=1, le=30)
     seat: Literal["A", "B", "C", "D", "E", "F"]
@@ -101,19 +53,6 @@ class SeatPreference(BaseModel):
 
 class Failed(BaseModel):
     """Unable to extract a seat selection."""
-
-
-# This agent is responsible for extracting the user's seat selection
-seat_preference_agent = Agent[None, SeatPreference | Failed](
-    "openai:gpt-4o-mini",
-    output_type=SeatPreference | Failed,
-    system_prompt=(
-        "Extract the user's seat preference. "
-        "Seats A and F are window seats. "
-        "Row 1 is the front row and has extra leg room. "
-        "Rows 14, and 20 also have extra leg room. "
-    ),
-)
 
 
 # in reality this would be downloaded from a booking site,
@@ -181,6 +120,62 @@ async def pydantic_ai_flight_booking() -> pixie.PixieGenerator[str, str]:
     - Programmatic agent hand-off (search -> seat selection)
     - Interactive user input for flight confirmation and seat preference
     """
+
+    # This agent is responsible for extracting flight details from web page text.
+    extraction_agent = Agent(
+        "openai:gpt-4o-mini",
+        output_type=list[FlightDetails],
+        system_prompt=flight_extraction_agent_prompt.compile(),
+    )
+
+    # This agent is responsible for controlling the flow of the conversation.
+    search_agent = Agent[Deps, FlightDetails | NoFlightFound](
+        "openai:gpt-4o-mini",
+        output_type=FlightDetails | NoFlightFound,  # type: ignore
+        retries=4,
+        system_prompt=flight_search_agent_prompt.compile(),
+    )
+
+    @search_agent.tool
+    async def extract_flights(ctx: RunContext[Deps]) -> list[FlightDetails]:
+        """Get details of all flights."""
+        # we pass the usage to the search agent so requests within this agent are counted
+        agent_result = await extraction_agent.run(
+            ctx.deps.web_page_text, usage=ctx.usage
+        )
+        return agent_result.output
+
+    @search_agent.output_validator
+    async def validate_output(
+        ctx: RunContext[Deps], output: FlightDetails | NoFlightFound
+    ) -> FlightDetails | NoFlightFound:
+        """Procedural validation that the flight meets the constraints."""
+        if isinstance(output, NoFlightFound):
+            return output
+
+        errors: list[str] = []
+        if output.origin != ctx.deps.req_origin:
+            errors.append(
+                f"Flight should have origin {ctx.deps.req_origin}, not {output.origin}"
+            )
+        if output.destination != ctx.deps.req_destination:
+            errors.append(
+                f"Flight should have destination {ctx.deps.req_destination}, not {output.destination}"
+            )
+        if output.date != ctx.deps.req_date:
+            errors.append(f"Flight should be on {ctx.deps.req_date}, not {output.date}")
+
+        if errors:
+            raise ModelRetry("\n".join(errors))
+        else:
+            return output
+
+    # This agent is responsible for extracting the user's seat selection
+    seat_preference_agent = Agent[None, SeatPreference | Failed](
+        "openai:gpt-4o-mini",
+        output_type=SeatPreference | Failed,
+        system_prompt=seat_preference_agent_prompt.compile(),
+    )
 
     deps = Deps(
         web_page_text=flights_web_page,

@@ -16,30 +16,61 @@ from agents import Agent, RawResponsesStreamEvent, Runner, TResponseInputItem
 import pixie
 
 
+french_agent_prompt = pixie.create_prompt("french_agent")
+spanish_agent_prompt = pixie.create_prompt("spanish_agent")
+english_agent_prompt = pixie.create_prompt("english_agent")
+triage_routing_agent_prompt = pixie.create_prompt("triage_routing_agent")
+
 # ============================================================================
 # LANGUAGE AGENTS
 # ============================================================================
 
-french_agent = Agent(
-    name="french_agent",
-    instructions="You only speak French",
-)
+# Agents will be lazily initialized
+_french_agent: Agent | None = None
+_spanish_agent: Agent | None = None
+_english_agent: Agent | None = None
+_triage_agent: Agent | None = None
 
-spanish_agent = Agent(
-    name="spanish_agent",
-    instructions="You only speak Spanish",
-)
 
-english_agent = Agent(
-    name="english_agent",
-    instructions="You only speak English",
-)
+def get_french_agent() -> Agent:
+    global _french_agent
+    if _french_agent is None:
+        _french_agent = Agent(
+            name="french_agent",
+            instructions=french_agent_prompt.compile(),
+        )
+    return _french_agent
 
-triage_agent = Agent(
-    name="triage_agent",
-    instructions="Handoff to the appropriate agent based on the language of the request.",
-    handoffs=[french_agent, spanish_agent, english_agent],
-)
+
+def get_spanish_agent() -> Agent:
+    global _spanish_agent
+    if _spanish_agent is None:
+        _spanish_agent = Agent(
+            name="spanish_agent",
+            instructions=spanish_agent_prompt.compile(),
+        )
+    return _spanish_agent
+
+
+def get_english_agent() -> Agent:
+    global _english_agent
+    if _english_agent is None:
+        _english_agent = Agent(
+            name="english_agent",
+            instructions=english_agent_prompt.compile(),
+        )
+    return _english_agent
+
+
+def get_triage_agent() -> Agent:
+    global _triage_agent
+    if _triage_agent is None:
+        _triage_agent = Agent(
+            name="triage_agent",
+            instructions=triage_routing_agent_prompt.compile(),
+            handoffs=[get_french_agent(), get_spanish_agent(), get_english_agent()],
+        )
+    return _triage_agent
 
 
 @pixie.app
@@ -58,7 +89,7 @@ async def openai_multilingual_routing() -> pixie.PixieGenerator[str, str]:
     Receives:
         User messages in any supported language via InputRequired
     """
-    agent = triage_agent
+    agent = get_triage_agent()
     inputs: list[TResponseInputItem] = []
 
     yield "Hi! We speak French, Spanish and English. How can I help?"
@@ -126,7 +157,7 @@ async def openai_multilingual_routing_simple(
     Receives:
         Follow-up user messages via InputRequired
     """
-    agent = triage_agent
+    agent = get_triage_agent()
     inputs: list[TResponseInputItem] = [{"content": initial_message, "role": "user"}]
 
     yield f"Processing your message: {initial_message[:50]}...\n"

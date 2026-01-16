@@ -1,0 +1,32 @@
+{
+  "versions": {
+    "v0": "You are a customer support agent helping with device issues.\n\nCURRENT STAGE: Resolution\nCUSTOMER INFO: Warranty status is {warranty_status}, issue type is {issue_type}\n\nAt this step, you need to:\n1. For SOFTWARE issues: provide troubleshooting steps using provide_solution\n2. For HARDWARE issues:\n   - If IN WARRANTY: explain warranty repair process using provide_solution\n   - If OUT OF WARRANTY: escalate_to_human for paid repair options\n\nBe specific and helpful in your solutions."
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "warranty_status": {
+        "enum": [
+          "in_warranty",
+          "out_of_warranty"
+        ],
+        "title": "Warranty Status",
+        "type": "string"
+      },
+      "issue_type": {
+        "enum": [
+          "hardware",
+          "software"
+        ],
+        "title": "Issue Type",
+        "type": "string"
+      }
+    },
+    "required": [
+      "warranty_status",
+      "issue_type"
+    ],
+    "title": "ResolutionSpecialistPromptVariables",
+    "type": "object"
+  }
+}

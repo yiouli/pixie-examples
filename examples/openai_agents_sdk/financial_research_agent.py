@@ -25,6 +25,14 @@ from agents import Agent, Runner, RunResult, RunResultStreaming, WebSearchTool
 import pixie
 
 
+financial_planner_prompt = pixie.create_prompt("financial_planner_agent")
+financial_search_prompt = pixie.create_prompt("financial_search_agent")
+financial_fundamentals_prompt = pixie.create_prompt("financial_fundamentals_agent")
+financial_risk_prompt = pixie.create_prompt("financial_risk_agent")
+financial_writer_prompt = pixie.create_prompt("financial_writer_agent")
+financial_verifier_prompt = pixie.create_prompt("financial_verifier_agent")
+
+
 # ============================================================================
 # AGENT DEFINITIONS
 # ============================================================================
@@ -48,69 +56,12 @@ class FinancialSearchPlan(BaseModel):
     """A list of searches to perform."""
 
 
-PLANNER_PROMPT = (
-    "You are a financial research planner. Given a request for financial analysis, "
-    "produce a set of web searches to gather the context needed. Aim for recent "
-    "headlines, earnings calls or 10‑K snippets, analyst commentary, and industry background. "
-    "Output between 5 and 15 search terms to query for."
-)
-
-planner_agent = Agent(
-    name="FinancialPlannerAgent",
-    instructions=PLANNER_PROMPT,
-    model="o3-mini",
-    output_type=FinancialSearchPlan,
-)
-
-
-# --- Search Agent ---
-SEARCH_INSTRUCTIONS = (
-    "You are a research assistant specializing in financial topics. "
-    "Given a search term, use web search to retrieve up‑to‑date context and "
-    "produce a short summary of at most 300 words. Focus on key numbers, events, "
-    "or quotes that will be useful to a financial analyst."
-)
-
-search_agent = Agent(
-    name="FinancialSearchAgent",
-    model="gpt-5.2",
-    instructions=SEARCH_INSTRUCTIONS,
-    tools=[WebSearchTool()],
-)
-
-
 # --- Analyst Agents ---
 class AnalysisSummary(BaseModel):
     """Analysis output from specialist agents"""
 
     summary: str
     """Short text summary for this aspect of the analysis."""
-
-
-FINANCIALS_PROMPT = (
-    "You are a financial analyst focused on company fundamentals such as revenue, "
-    "profit, margins and growth trajectory. Given a collection of web (and optional file) "
-    "search results about a company, write a concise analysis of its recent financial "
-    "performance. Pull out key metrics or quotes. Keep it under 2 paragraphs."
-)
-
-financials_agent = Agent(
-    name="FundamentalsAnalystAgent",
-    instructions=FINANCIALS_PROMPT,
-    output_type=AnalysisSummary,
-)
-
-RISK_PROMPT = (
-    "You are a risk analyst looking for potential red flags in a company's outlook. "
-    "Given background research, produce a short analysis of risks such as competitive threats, "
-    "regulatory issues, supply chain problems, or slowing growth. Keep it under 2 paragraphs."
-)
-
-risk_agent = Agent(
-    name="RiskAnalystAgent",
-    instructions=RISK_PROMPT,
-    output_type=AnalysisSummary,
-)
 
 
 # --- Writer Agent ---
@@ -127,22 +78,6 @@ class FinancialReportData(BaseModel):
     """Suggested follow‑up questions for further research."""
 
 
-WRITER_PROMPT = (
-    "You are a senior financial analyst. You will be provided with the original query and "
-    "a set of raw search summaries. Your task is to synthesize these into a long‑form markdown "
-    "report (at least several paragraphs) including a short executive summary and follow‑up "
-    "questions. If needed, you can call the available analysis tools (e.g. fundamentals_analysis, "
-    "risk_analysis) to get short specialist write‑ups to incorporate."
-)
-
-writer_agent = Agent(
-    name="FinancialWriterAgent",
-    instructions=WRITER_PROMPT,
-    model="gpt-5.2",
-    output_type=FinancialReportData,
-)
-
-
 # --- Verifier Agent ---
 class VerificationResult(BaseModel):
     """Verification outcome"""
@@ -154,18 +89,83 @@ class VerificationResult(BaseModel):
     """If not verified, describe the main issues or concerns."""
 
 
-VERIFIER_PROMPT = (
-    "You are a meticulous auditor. You have been handed a financial analysis report. "
-    "Your job is to verify the report is internally consistent, clearly sourced, and makes "
-    "no unsupported claims. Point out any issues or uncertainties."
-)
+# Agents will be lazily initialized
+_planner_agent: Agent | None = None
+_search_agent: Agent | None = None
+_financials_agent: Agent | None = None
+_risk_agent: Agent | None = None
+_writer_agent: Agent | None = None
+_verifier_agent: Agent | None = None
 
-verifier_agent = Agent(
-    name="VerificationAgent",
-    instructions=VERIFIER_PROMPT,
-    model="gpt-5.2",
-    output_type=VerificationResult,
-)
+
+def get_planner_agent() -> Agent:
+    global _planner_agent
+    if _planner_agent is None:
+        _planner_agent = Agent(
+            name="FinancialPlannerAgent",
+            instructions=financial_planner_prompt.compile(),
+            model="o3-mini",
+            output_type=FinancialSearchPlan,
+        )
+    return _planner_agent
+
+
+def get_search_agent() -> Agent:
+    global _search_agent
+    if _search_agent is None:
+        _search_agent = Agent(
+            name="FinancialSearchAgent",
+            model="gpt-5.2",
+            instructions=financial_search_prompt.compile(),
+            tools=[WebSearchTool()],
+        )
+    return _search_agent
+
+
+def get_financials_agent() -> Agent:
+    global _financials_agent
+    if _financials_agent is None:
+        _financials_agent = Agent(
+            name="FundamentalsAnalystAgent",
+            instructions=financial_fundamentals_prompt.compile(),
+            output_type=AnalysisSummary,
+        )
+    return _financials_agent
+
+
+def get_risk_agent() -> Agent:
+    global _risk_agent
+    if _risk_agent is None:
+        _risk_agent = Agent(
+            name="RiskAnalystAgent",
+            instructions=financial_risk_prompt.compile(),
+            output_type=AnalysisSummary,
+        )
+    return _risk_agent
+
+
+def get_writer_agent() -> Agent:
+    global _writer_agent
+    if _writer_agent is None:
+        _writer_agent = Agent(
+            name="FinancialWriterAgent",
+            instructions=financial_writer_prompt.compile(),
+            model="gpt-5.2",
+            output_type=FinancialReportData,
+        )
+    return _writer_agent
+
+
+def get_verifier_agent() -> Agent:
+    global _verifier_agent
+    if _verifier_agent is None:
+        _verifier_agent = Agent(
+            name="VerificationAgent",
+            instructions=financial_verifier_prompt.compile(),
+            model="gpt-5.2",
+            output_type=VerificationResult,
+        )
+    return _verifier_agent
 
 
 # ============================================================================
@@ -180,7 +180,7 @@ async def _summary_extractor(run_result: RunResult | RunResultStreaming) -> str:
 
 async def _plan_searches(query: str) -> FinancialSearchPlan:
     """Create a search plan for the given query"""
-    result = await Runner.run(planner_agent, f"Query: {query}")
+    result = await Runner.run(get_planner_agent(), f"Query: {query}")
     return result.final_output_as(FinancialSearchPlan)
 
 
@@ -188,7 +188,7 @@ async def _perform_search(item: FinancialSearchItem) -> str | None:
     """Perform a single search"""
     input_data = f"Search term: {item.query}\nReason: {item.reason}"
     try:
-        result = await Runner.run(search_agent, input_data)
+        result = await Runner.run(get_search_agent(), input_data)
         return str(result.final_output)
     except Exception:
         return None
@@ -214,18 +214,18 @@ async def _write_report(
 ) -> FinancialReportData:
     """Write the final report using specialist tools"""
     # Expose the specialist analysts as tools
-    fundamentals_tool = financials_agent.as_tool(
+    fundamentals_tool = get_financials_agent().as_tool(
         tool_name="fundamentals_analysis",
         tool_description="Use to get a short write‑up of key financial metrics",
         custom_output_extractor=_summary_extractor,
     )
-    risk_tool = risk_agent.as_tool(
+    risk_tool = get_risk_agent().as_tool(
         tool_name="risk_analysis",
         tool_description="Use to get a short write‑up of potential red flags",
         custom_output_extractor=_summary_extractor,
     )
 
-    writer_with_tools = writer_agent.clone(tools=[fundamentals_tool, risk_tool])
+    writer_with_tools = get_writer_agent().clone(tools=[fundamentals_tool, risk_tool])
     input_data = f"Original query: {query}\nSummarized search results: {search_results}"
 
     result = await Runner.run(writer_with_tools, input_data)
@@ -234,7 +234,7 @@ async def _write_report(
 
 async def _verify_report(report: FinancialReportData) -> VerificationResult:
     """Verify report quality"""
-    result = await Runner.run(verifier_agent, report.markdown_report)
+    result = await Runner.run(get_verifier_agent(), report.markdown_report)
     return result.final_output_as(VerificationResult)
 
 

@@ -1,0 +1,10 @@
+{
+  "versions": {
+    "v0": "You are a sleepy poet. When given a topic, you first take a nap by calling the `sleep_for_a_bit` tool once and once only, then write a haiku about the topic."
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}

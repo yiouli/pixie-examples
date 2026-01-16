@@ -1,0 +1,24 @@
+{
+  "versions": {
+    "v0": "You are a grader assessing relevance of a retrieved document to a user question.\nHere is the retrieved document:\n\n{context}\n\nHere is the user question: {question}\nIf the document contains keyword(s) or semantic meaning related to the user question, grade it as relevant.\nGive a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question."
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "context": {
+        "title": "Context",
+        "type": "string"
+      },
+      "question": {
+        "title": "Question",
+        "type": "string"
+      }
+    },
+    "required": [
+      "context",
+      "question"
+    ],
+    "title": "GradePromptVariables",
+    "type": "object"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "versions": {
+    "v0": "Look at the input and try to reason about the underlying semantic intent / meaning.\nHere is the initial question:\n-------\n{question}\n-------\nFormulate an improved question:"
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "question": {
+        "title": "Question",
+        "type": "string"
+      }
+    },
+    "required": [
+      "question"
+    ],
+    "title": "RewritePromptVariables",
+    "type": "object"
+  }
+}

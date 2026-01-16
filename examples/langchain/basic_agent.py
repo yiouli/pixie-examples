@@ -12,6 +12,9 @@ from langfuse.langchain import CallbackHandler
 import pixie
 
 
+basic_weather_agent_prompt = pixie.create_prompt("basic_weather_agent")
+interactive_weather_agent_prompt = pixie.create_prompt("interactive_weather_agent")
+
 langfuse_handler = CallbackHandler()
 
 
@@ -37,7 +40,7 @@ async def langchain_basic_weather_agent(query: str) -> str:
     agent = create_agent(
         model=model,
         tools=[get_weather],
-        system_prompt="You are a helpful weather assistant",
+        system_prompt=basic_weather_agent_prompt.compile(),
     )
 
     # Run the agent
@@ -66,7 +69,7 @@ async def langchain_interactive_weather_agent() -> pixie.PixieGenerator[str, str
     agent = create_agent(
         model=model,
         tools=[get_weather],
-        system_prompt="You are a helpful weather assistant that answers questions about weather.",
+        system_prompt=interactive_weather_agent_prompt.compile(),
     )
 
     # Send welcome message

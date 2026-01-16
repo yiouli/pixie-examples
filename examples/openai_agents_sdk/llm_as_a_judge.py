@@ -17,16 +17,6 @@ from agents import Agent, ItemHelpers, Runner, TResponseInputItem
 import pixie
 
 
-# Story outline generator agent
-story_outline_generator = Agent(
-    name="story_outline_generator",
-    instructions=(
-        "You generate a very short story outline based on the user's input. "
-        "If there is any feedback provided, use it to improve the outline."
-    ),
-)
-
-
 @dataclass
 class EvaluationFeedback:
     """Feedback from the evaluator agent"""
@@ -35,17 +25,8 @@ class EvaluationFeedback:
     score: Literal["pass", "needs_improvement", "fail"]
 
 
-# Evaluator agent that judges the story outline
-evaluator = Agent[None](
-    name="evaluator",
-    instructions=(
-        "You evaluate a story outline and decide if it's good enough. "
-        "If it's not good enough, you provide feedback on what needs to be improved. "
-        "Never give it a pass on the first try. After 5 attempts, you can give "
-        "it a pass if the story outline is good enough - do not go for perfection"
-    ),
-    output_type=EvaluationFeedback,
-)
+generator_prompt = pixie.create_prompt("story_outline_generator")
+evaluator_prompt = pixie.create_prompt("evaluator")
 
 
 @pixie.app
@@ -63,6 +44,19 @@ async def openai_agents_llm_as_a_judge(topic: str) -> pixie.PixieGenerator[str, 
         Status updates and the final story outline
     """
     yield f"Starting story generation for: {topic}"
+
+    # Story outline generator agent
+    story_outline_generator = Agent(
+        name=generator_prompt.id,
+        instructions=generator_prompt.compile(),
+    )
+
+    # Evaluator agent that judges the story outline
+    evaluator = Agent[None](
+        name=evaluator_prompt.id,
+        instructions=evaluator_prompt.compile(),
+        output_type=EvaluationFeedback,
+    )
 
     input_items: list[TResponseInputItem] = [{"content": topic, "role": "user"}]
     latest_outline: str | None = None

@@ -13,6 +13,15 @@ from pydantic_ai import Agent, ModelRetry, RunContext, format_as_xml
 import pixie
 
 
+class SqlGenPromptVariables(pixie.PromptVariables):
+    db_schema: str
+    today_date: str
+    sql_examples: str
+
+
+sql_gen_agent_prompt = pixie.create_prompt("sql_gen_agent", SqlGenPromptVariables)
+
+
 # Simulated database schema
 DB_SCHEMA = """
 CREATE TABLE records (
@@ -88,18 +97,13 @@ agent = Agent[Deps, Response](
 
 @agent.system_prompt
 async def system_prompt() -> str:
-    return f"""\
-Given the following PostgreSQL table of records, your job is to
-write a SQL query that suits the user's request.
-
-Database schema:
-
-{DB_SCHEMA}
-
-today's date = {date.today()}
-
-{format_as_xml(SQL_EXAMPLES)}
-"""
+    return sql_gen_agent_prompt.compile(
+        SqlGenPromptVariables(
+            db_schema=DB_SCHEMA,
+            today_date=str(date.today()),
+            sql_examples=format_as_xml(SQL_EXAMPLES),
+        )
+    )
 
 
 @agent.output_validator

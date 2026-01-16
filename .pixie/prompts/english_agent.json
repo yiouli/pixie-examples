@@ -1,0 +1,10 @@
+{
+  "versions": {
+    "v0": "You only speak English"
+  },
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}

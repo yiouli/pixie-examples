@@ -26,6 +26,9 @@ from pydantic_ai import Agent, RunContext
 import pixie
 
 
+bank_support_agent_prompt = pixie.create_prompt("bank_support_agent")
+
+
 @dataclass
 class DatabaseConn:
     """A wrapper over the SQLite connection."""
@@ -69,34 +72,6 @@ class SupportOutput(BaseModel):
     """Risk level of query"""
 
 
-# Create the support agent
-support_agent = Agent(
-    "openai:gpt-4o-mini",
-    deps_type=SupportDependencies,
-    output_type=SupportOutput,
-    instructions=(
-        "You are a support agent in our bank, give the "
-        "customer support and judge the risk level of their query. "
-        "Reply using the customer's name."
-    ),
-)
-
-
-@support_agent.instructions
-async def add_customer_name(ctx: RunContext[SupportDependencies]) -> str:
-    customer_name = await ctx.deps.db.customer_name(customer_id=ctx.deps.customer_id)
-    return f"The customer's name is {customer_name!r}"
-
-
-@support_agent.tool
-async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
-    """Returns the customer's current account balance."""
-    balance = await ctx.deps.db.customer_balance(
-        customer_id=ctx.deps.customer_id,
-    )
-    return f"${balance:.2f}"
-
-
 @pixie.app
 async def pydantic_ai_bank_support_agent() -> pixie.PixieGenerator[str, str]:
     """Interactive bank support agent.
@@ -110,6 +85,29 @@ async def pydantic_ai_bank_support_agent() -> pixie.PixieGenerator[str, str]:
     Receives:
         str: User queries via InputRequired
     """
+
+    # Create the support agent
+    support_agent = Agent(
+        "openai:gpt-4o-mini",
+        deps_type=SupportDependencies,
+        output_type=SupportOutput,
+        instructions=bank_support_agent_prompt.compile(),
+    )
+
+    @support_agent.instructions
+    async def add_customer_name(ctx: RunContext[SupportDependencies]) -> str:
+        customer_name = await ctx.deps.db.customer_name(
+            customer_id=ctx.deps.customer_id
+        )
+        return f"The customer's name is {customer_name!r}"
+
+    @support_agent.tool
+    async def customer_balance_tool(ctx: RunContext[SupportDependencies]) -> str:
+        """Returns the customer's current account balance."""
+        balance = await ctx.deps.db.customer_balance(
+            customer_id=ctx.deps.customer_id,
+        )
+        return f"${balance:.2f}"
 
     # Initialize database connection (in-memory for demo)
     with sqlite3.connect(":memory:") as con:
