@@ -19,9 +19,18 @@ from pydantic_ai import (
 import pixie
 
 
-flight_search_agent_prompt = pixie.create_prompt("flight_search_agent")
-flight_extraction_agent_prompt = pixie.create_prompt("flight_extraction_agent")
-seat_preference_agent_prompt = pixie.create_prompt("seat_preference_agent")
+flight_search_agent_prompt = pixie.create_prompt(
+    "flight_search_agent",
+    description="Finds the cheapest flight for the user on a given date",
+)
+flight_extraction_agent_prompt = pixie.create_prompt(
+    "flight_extraction_agent",
+    description="Extracts flight details from text",
+)
+seat_preference_agent_prompt = pixie.create_prompt(
+    "seat_preference_agent",
+    description="Extracts user seat preferences including window seats and extra leg room",
+)
 
 
 class FlightDetails(BaseModel):

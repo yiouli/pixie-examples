@@ -9,7 +9,10 @@ from pydantic_ai.models.openai import OpenAIChatModelSettings
 
 import pixie
 
-sleepy_poet_prompt = pixie.create_prompt("sleepy_poet")
+sleepy_poet_prompt = pixie.create_prompt(
+    "sleepy_poet",
+    description="A sleepy poet that naps before writing haikus",
+)
 
 logger = logging.getLogger(__name__)
 

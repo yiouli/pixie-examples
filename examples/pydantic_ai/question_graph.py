@@ -23,8 +23,14 @@ class EvaluationOutput(BaseModel, use_attribute_docstrings=True):
     """Comment on the answer, reprimand the user if the answer is wrong."""
 
 
-ask_agent_prompt = pixie.create_prompt("question_ask_agent")
-evaluate_agent_prompt = pixie.create_prompt("question_evaluate_agent")
+ask_agent_prompt = pixie.create_prompt(
+    "question_ask_agent",
+    description="Asks simple questions with a single correct answer",
+)
+evaluate_agent_prompt = pixie.create_prompt(
+    "question_evaluate_agent",
+    description="Evaluates if an answer to a question is correct",
+)
 
 # Agents will be initialized lazily inside the app handler
 ask_agent: Agent

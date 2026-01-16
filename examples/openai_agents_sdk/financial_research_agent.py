@@ -25,12 +25,30 @@ from agents import Agent, Runner, RunResult, RunResultStreaming, WebSearchTool
 import pixie
 
 
-financial_planner_prompt = pixie.create_prompt("financial_planner_agent")
-financial_search_prompt = pixie.create_prompt("financial_search_agent")
-financial_fundamentals_prompt = pixie.create_prompt("financial_fundamentals_agent")
-financial_risk_prompt = pixie.create_prompt("financial_risk_agent")
-financial_writer_prompt = pixie.create_prompt("financial_writer_agent")
-financial_verifier_prompt = pixie.create_prompt("financial_verifier_agent")
+financial_planner_prompt = pixie.create_prompt(
+    "financial_planner_agent",
+    description="Plans web searches to gather financial research context",
+)
+financial_search_prompt = pixie.create_prompt(
+    "financial_search_agent",
+    description="Searches and summarizes financial topics from web results",
+)
+financial_fundamentals_prompt = pixie.create_prompt(
+    "financial_fundamentals_agent",
+    description="Analyzes company fundamentals like revenue, profit, and growth",
+)
+financial_risk_prompt = pixie.create_prompt(
+    "financial_risk_agent",
+    description="Identifies and analyzes potential risks in company outlook",
+)
+financial_writer_prompt = pixie.create_prompt(
+    "financial_writer_agent",
+    description="Synthesizes research into comprehensive financial analysis reports",
+)
+financial_verifier_prompt = pixie.create_prompt(
+    "financial_verifier_agent",
+    description="Verifies financial reports for consistency and accuracy",
+)
 
 
 # ============================================================================

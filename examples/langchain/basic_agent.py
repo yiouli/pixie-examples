@@ -12,8 +12,14 @@ from langfuse.langchain import CallbackHandler
 import pixie
 
 
-basic_weather_agent_prompt = pixie.create_prompt("basic_weather_agent")
-interactive_weather_agent_prompt = pixie.create_prompt("interactive_weather_agent")
+basic_weather_agent_prompt = pixie.create_prompt(
+    "basic_weather_agent",
+    description="Helpful weather assistant",
+)
+interactive_weather_agent_prompt = pixie.create_prompt(
+    "interactive_weather_agent",
+    description="Interactive weather assistant that answers questions about weather",
+)
 
 langfuse_handler = CallbackHandler()
 

@@ -19,7 +19,11 @@ class SqlGenPromptVariables(pixie.PromptVariables):
     sql_examples: str
 
 
-sql_gen_agent_prompt = pixie.create_prompt("sql_gen_agent", SqlGenPromptVariables)
+sql_gen_agent_prompt = pixie.create_prompt(
+    "sql_gen_agent",
+    SqlGenPromptVariables,
+    description="Generates SQL queries from natural language for PostgreSQL databases",
+)
 
 
 # Simulated database schema

@@ -10,7 +10,11 @@ class PromptVariables(pixie.PromptVariables):
     )
 
 
-agent_prompt = pixie.create_prompt("problem_solver", PromptVariables)
+agent_prompt = pixie.create_prompt(
+    "problem_solver",
+    PromptVariables,
+    description="Problem solving agent that thinks step by step",
+)
 
 
 @pixie.app

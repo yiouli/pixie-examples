@@ -25,8 +25,14 @@ class EvaluationFeedback:
     score: Literal["pass", "needs_improvement", "fail"]
 
 
-generator_prompt = pixie.create_prompt("story_outline_generator")
-evaluator_prompt = pixie.create_prompt("evaluator")
+generator_prompt = pixie.create_prompt(
+    "story_outline_generator",
+    description="Generates short story outlines based on user input",
+)
+evaluator_prompt = pixie.create_prompt(
+    "evaluator",
+    description="Evaluates story outlines and provides improvement feedback",
+)
 
 
 @pixie.app

@@ -16,9 +16,18 @@ from langfuse.langchain import CallbackHandler
 import pixie
 
 
-calendar_agent_prompt = pixie.create_prompt("calendar_agent")
-email_agent_prompt = pixie.create_prompt("email_agent")
-supervisor_agent_prompt = pixie.create_prompt("supervisor_agent")
+calendar_agent_prompt = pixie.create_prompt(
+    "calendar_agent",
+    description="Calendar scheduling assistant that parses natural language requests",
+)
+email_agent_prompt = pixie.create_prompt(
+    "email_agent",
+    description="Email assistant that composes and sends professional emails",
+)
+supervisor_agent_prompt = pixie.create_prompt(
+    "supervisor_agent",
+    description="Personal assistant coordinator that handles calendar and email tasks",
+)
 
 langfuse_handler = CallbackHandler()
 

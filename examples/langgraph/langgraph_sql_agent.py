@@ -27,10 +27,14 @@ class LanggraphSqlPromptVariables(pixie.PromptVariables):
 
 
 langgraph_sql_generate_prompt = pixie.create_prompt(
-    "langgraph_sql_generate_query", LanggraphSqlPromptVariables
+    "langgraph_sql_generate_query",
+    LanggraphSqlPromptVariables,
+    description="Generates SQL queries from natural language questions",
 )
 langgraph_sql_check_prompt = pixie.create_prompt(
-    "langgraph_sql_check_query", LanggraphSqlPromptVariables
+    "langgraph_sql_check_query",
+    LanggraphSqlPromptVariables,
+    description="Reviews and validates SQL queries for common mistakes",
 )
 
 langfuse_handler = CallbackHandler()

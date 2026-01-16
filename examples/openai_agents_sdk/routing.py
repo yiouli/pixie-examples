@@ -16,10 +16,22 @@ from agents import Agent, RawResponsesStreamEvent, Runner, TResponseInputItem
 import pixie
 
 
-french_agent_prompt = pixie.create_prompt("french_agent")
-spanish_agent_prompt = pixie.create_prompt("spanish_agent")
-english_agent_prompt = pixie.create_prompt("english_agent")
-triage_routing_agent_prompt = pixie.create_prompt("triage_routing_agent")
+french_agent_prompt = pixie.create_prompt(
+    "french_agent",
+    description="Agent that only speaks French",
+)
+spanish_agent_prompt = pixie.create_prompt(
+    "spanish_agent",
+    description="Agent that only speaks Spanish",
+)
+english_agent_prompt = pixie.create_prompt(
+    "english_agent",
+    description="Agent that only speaks English",
+)
+triage_routing_agent_prompt = pixie.create_prompt(
+    "triage_routing_agent",
+    description="Routes requests to appropriate language-specific agent",
+)
 
 # ============================================================================
 # LANGUAGE AGENTS

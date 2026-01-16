@@ -101,14 +101,19 @@ class ResolutionSpecialistPromptVariables(IssueClassifierPromptVariables):
     issue_type: Literal["hardware", "software"]
 
 
-warranty_collector_prompt = pixie.create_prompt("warranty_collector_agent")
+warranty_collector_prompt = pixie.create_prompt(
+    "warranty_collector_agent",
+    description="Customer support agent that collects warranty information",
+)
 issue_classifier_prompt = pixie.create_prompt(
     "issue_classifier_agent",
     IssueClassifierPromptVariables,
+    description="Customer support agent that classifies technical issues as hardware or software",
 )
 resolution_specialist_prompt = pixie.create_prompt(
     "resolution_specialist_agent",
     ResolutionSpecialistPromptVariables,
+    description="Customer support agent that provides resolutions based on issue type and warranty status",
 )
 # Step configuration
 STEP_CONFIG = {

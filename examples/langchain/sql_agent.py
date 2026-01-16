@@ -31,7 +31,11 @@ class SqlAgentPromptVariables(pixie.PromptVariables):
     top_k: int
 
 
-sql_agent_prompt = pixie.create_prompt("langchain_sql_agent", SqlAgentPromptVariables)
+sql_agent_prompt = pixie.create_prompt(
+    "langchain_sql_agent",
+    SqlAgentPromptVariables,
+    description="SQL agent that interacts with databases and creates queries based on natural language",
+)
 
 langfuse_handler = CallbackHandler()
 

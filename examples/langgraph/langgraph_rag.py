@@ -42,10 +42,20 @@ class GeneratePromptVariables(pixie.PromptVariables):
     context: str
 
 
-rag_grade_prompt = pixie.create_prompt("rag_grade_documents", GradePromptVariables)
-rag_rewrite_prompt = pixie.create_prompt("rag_rewrite_question", RewritePromptVariables)
+rag_grade_prompt = pixie.create_prompt(
+    "rag_grade_documents",
+    GradePromptVariables,
+    description="Grades relevance of retrieved documents to user questions",
+)
+rag_rewrite_prompt = pixie.create_prompt(
+    "rag_rewrite_question",
+    RewritePromptVariables,
+    description="Rewrites questions to improve semantic understanding",
+)
 rag_generate_prompt = pixie.create_prompt(
-    "rag_generate_answer", GeneratePromptVariables
+    "rag_generate_answer",
+    GeneratePromptVariables,
+    description="Generates concise answers from retrieved context",
 )
 
 langfuse_handler = CallbackHandler()

@@ -29,9 +29,18 @@ from agents import (
 import pixie
 
 
-faq_agent_prompt = pixie.create_prompt("airline_faq_agent")
-seat_booking_agent_prompt = pixie.create_prompt("airline_seat_booking_agent")
-triage_agent_prompt = pixie.create_prompt("airline_triage_agent")
+faq_agent_prompt = pixie.create_prompt(
+    "airline_faq_agent",
+    description="FAQ agent that answers customer questions using knowledge base lookup",
+)
+seat_booking_agent_prompt = pixie.create_prompt(
+    "airline_seat_booking_agent",
+    description="Seat booking agent that updates flight seat assignments",
+)
+triage_agent_prompt = pixie.create_prompt(
+    "airline_triage_agent",
+    description="Triage agent that delegates customer inquiries to appropriate specialists",
+)
 
 
 # ============================================================================

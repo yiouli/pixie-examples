@@ -26,7 +26,10 @@ from pydantic_ai import Agent, RunContext
 import pixie
 
 
-bank_support_agent_prompt = pixie.create_prompt("bank_support_agent")
+bank_support_agent_prompt = pixie.create_prompt(
+    "bank_support_agent",
+    description="Support agent that helps customers and assesses risk levels",
+)
 
 
 @dataclass
