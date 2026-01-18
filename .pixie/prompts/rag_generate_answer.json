@@ -1,6 +1,6 @@
 {
   "versions": {
-    "v0": "You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: {question}\nContext: {context}"
+    "v0": "You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: {{ question }}\nContext: {{ context }}"
   },
   "defaultVersionId": "v0",
   "variablesSchema": {
@@ -14,10 +14,7 @@
         "type": "string"
       }
     },
-    "required": [
-      "question",
-      "context"
-    ],
+    "required": ["question", "context"],
     "title": "GeneratePromptVariables",
     "type": "object"
   }
