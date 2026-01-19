@@ -75,11 +75,21 @@ async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
         yield "What's your request?"
         config = yield pixie.InputRequired(HaikuRequest)
 
+        ack = asyncio.Event()
+        haiku_writen = False
+
         async def write_haikus():
             for i in range(0, config.count):
+                print("writing haiku", i + 1)
                 result = await poet.run(config.topic, deps=deps)
                 await q.put(f"### Haiku #{i+1}\n{result.output}\n")
                 deps.time_to_write = False  # Reset for next haiku
+
+                nonlocal haiku_writen
+                haiku_writen = True  # let consumer know a kaiku was written
+
+                await ack.wait()  # Wait for acknowledgment before next haiku
+                ack.clear()
 
             await q.put(None)  # Signal completion
 
@@ -89,7 +99,11 @@ async def example_sleepy_poet() -> pixie.PixieGenerator[str, HaikuRequest]:
                 update = await q.get()
                 if update is None:
                     break
+                print(update)
                 yield update
+                if haiku_writen:  # acknowledge after receiving a writen haiku
+                    haiku_writen = False
+                    ack.set()  # send acknowledgment to writer so it can proceed
 
         except asyncio.CancelledError:
             task.cancel()
