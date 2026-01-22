@@ -23,58 +23,10 @@ class LatLng(BaseModel):
     lng: float
 
 
-# Create the weather agent
-agent = Agent(
-    "openai:gpt-4o-mini",
-    instructions="Be concise, reply with one sentence.",
-    deps_type=Deps,
-    retries=2,
+pydantic_weather_agent_prompt = pixie.create_prompt(
+    "pydantic_weather_agent",
+    description="Prompt for an interactive agent built with Pydantic-ai.",
 )
-
-
-@agent.tool
-async def get_lat_lng(ctx: RunContext[Deps], location_description: str) -> LatLng:
-    """Get the latitude and longitude of a location.
-
-    Args:
-        ctx: The context.
-        location_description: A description of a location.
-    """
-    # NOTE: Uses demo endpoints that return random data
-    r = await ctx.deps.client.get(
-        "https://demo-endpoints.pydantic.workers.dev/latlng",
-        params={"location": location_description},
-    )
-    r.raise_for_status()
-    return LatLng.model_validate_json(r.content)
-
-
-@agent.tool
-async def get_weather(ctx: RunContext[Deps], lat: float, lng: float) -> dict[str, Any]:
-    """Get the weather at a location.
-
-    Args:
-        ctx: The context.
-        lat: Latitude of the location.
-        lng: Longitude of the location.
-    """
-    # NOTE: Uses demo endpoints that return random data
-    temp_response, descr_response = await asyncio.gather(
-        ctx.deps.client.get(
-            "https://demo-endpoints.pydantic.workers.dev/number",
-            params={"min": 10, "max": 30},
-        ),
-        ctx.deps.client.get(
-            "https://demo-endpoints.pydantic.workers.dev/weather",
-            params={"lat": lat, "lng": lng},
-        ),
-    )
-    temp_response.raise_for_status()
-    descr_response.raise_for_status()
-    return {
-        "temperature": f"{temp_response.text} °C",
-        "description": descr_response.text,
-    }
 
 
 @pixie.app
@@ -93,6 +45,59 @@ async def example_weather_agent() -> pixie.PixieGenerator[str, str]:
 
     The conversation continues until the user enters a stop word ('exit', 'quit', or 'stop').
     """
+
+    # Create the weather agent
+    agent = Agent(
+        "openai:gpt-4o-mini",
+        instructions=pydantic_weather_agent_prompt.compile(),
+        deps_type=Deps,
+        retries=2,
+    )
+
+    @agent.tool
+    async def get_lat_lng(ctx: RunContext[Deps], location_description: str) -> LatLng:
+        """Get the latitude and longitude of a location.
+
+        Args:
+            ctx: The context.
+            location_description: A description of a location.
+        """
+        # NOTE: Uses demo endpoints that return random data
+        r = await ctx.deps.client.get(
+            "https://demo-endpoints.pydantic.workers.dev/latlng",
+            params={"location": location_description},
+        )
+        r.raise_for_status()
+        return LatLng.model_validate_json(r.content)
+
+    @agent.tool
+    async def get_weather(
+        ctx: RunContext[Deps], lat: float, lng: float
+    ) -> dict[str, Any]:
+        """Get the weather at a location.
+
+        Args:
+            ctx: The context.
+            lat: Latitude of the location.
+            lng: Longitude of the location.
+        """
+        # NOTE: Uses demo endpoints that return random data
+        temp_response, descr_response = await asyncio.gather(
+            ctx.deps.client.get(
+                "https://demo-endpoints.pydantic.workers.dev/number",
+                params={"min": 10, "max": 30},
+            ),
+            ctx.deps.client.get(
+                "https://demo-endpoints.pydantic.workers.dev/weather",
+                params={"lat": lat, "lng": lng},
+            ),
+        )
+        temp_response.raise_for_status()
+        descr_response.raise_for_status()
+        return {
+            "temperature": f"{temp_response.text} °C",
+            "description": descr_response.text,
+        }
 
     yield "Hi! I can help you find the weather for any location."
     yield "Enter 'exit', 'quit', or 'stop' to end the conversation."

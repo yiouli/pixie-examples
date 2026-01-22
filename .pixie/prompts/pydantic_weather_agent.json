@@ -1,0 +1,10 @@
+{
+  "versions": {
+    "v1": "Be concise, reply with one sentence."
+  },
+  "defaultVersionId": "v1",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}
