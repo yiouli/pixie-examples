@@ -1,0 +1,10 @@
+{
+  "versions": {
+    "v1": "You are a helpful assistant."
+  },
+  "defaultVersionId": "v1",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}

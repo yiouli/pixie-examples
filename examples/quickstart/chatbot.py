@@ -2,10 +2,10 @@ from pydantic_ai import Agent
 
 import pixie
 
-agent = Agent(
-    name="Simple chatbot",
-    instructions="You are a helpful assistant.",
-    model="gpt-4o-mini",
+
+prompt = pixie.create_prompt(
+    "example_chatbot",
+    description="Prompt for simple interactive chatbot.",
 )
 
 
@@ -15,6 +15,11 @@ async def example_chatbot():
 
     An OpenAI API key environment variable *(`OPENAI_API_KEY`)* is required to run this example.
     """
+    agent = Agent(
+        name="Simple chatbot",
+        instructions=prompt.compile(),
+        model="gpt-4o-mini",
+    )
 
     yield "How can I help you today?"
     messages = []
