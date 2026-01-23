@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIChatModelSettings
 
-import pixie
+import pixie.sdk as pixie
 
 sleepy_poet_prompt = pixie.create_prompt(
     "sleepy_poet",

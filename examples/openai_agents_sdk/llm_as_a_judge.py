@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from agents import Agent, ItemHelpers, Runner, TResponseInputItem
-import pixie
+import pixie.sdk as pixie
 
 
 @dataclass

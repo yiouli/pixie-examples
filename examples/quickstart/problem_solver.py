@@ -1,10 +1,10 @@
 from pydantic import Field
 from pydantic_ai import Agent
 
-import pixie
+import pixie.sdk as pixie
 
 
-class PromptVariables(pixie.PromptVariables):
+class Variables(pixie.Variables):
     problem_description: str = Field(
         ..., description="A description of the problem to be solved."
     )
@@ -12,7 +12,7 @@ class PromptVariables(pixie.PromptVariables):
 
 agent_prompt = pixie.create_prompt(
     "problem_solver",
-    PromptVariables,
+    Variables,
     description="Problem solving agent that thinks step by step",
 )
 
@@ -30,7 +30,7 @@ async def example_problem_solver(problem_description: str):
     agent = Agent(
         name=agent_prompt.id,
         instructions=agent_prompt.compile(
-            PromptVariables(problem_description=problem_description)
+            Variables(problem_description=problem_description)
         ),
         model="gpt-4o-mini",
     )

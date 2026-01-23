@@ -47,7 +47,7 @@ async def my_app(input: InputType) -> PixieGenerator[YieldType, SendType]:
 - **YieldType**: Type of data yielded/sent to the client (JSON-serializable or `BaseModel`)
 - **SendType**: Type of data received from user input (JSON-serializable or `BaseModel`)
 - Use `PixieGenerator[YieldType, SendType]` as the return type annotation
-- Import from `pixie`: `from pixie import PixieGenerator`
+- Import from `pixie`: `import pixie.sdk as pixie`
 
 ## Input Type Requirements
 
@@ -119,7 +119,7 @@ For interactive applications that need to receive user input mid-execution, use 
 ### Basic Pattern
 
 ```python
-from pixie import UserInputRequirement
+from pixie.sdk import UserInputRequirement
 
 @app
 async def interactive_app(initial: str) -> PixieGenerator[str, str]:
@@ -177,7 +177,7 @@ user_data = yield UserInputRequirement(dict)
 ```python
 from pydantic import BaseModel
 from pydantic_ai import Agent
-from pixie import app
+from pixie.sdk import app
 
 # Define input model
 class WeatherQuery(BaseModel):
@@ -207,7 +207,7 @@ async def weather(query: WeatherQuery) -> str:
 ```python
 from types import None
 from pydantic_ai import Agent, ModelMessage, ModelRequest
-from pixie import app, PixieGenerator, UserInputRequirement
+from pixie.sdk import app, PixieGenerator, UserInputRequirement
 
 chatbot = Agent(
     "openai:gpt-4o-mini",
@@ -251,7 +251,7 @@ async def chat_with_ai(_: None) -> PixieGenerator[str, str]:
 ```python
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import app, PixieGenerator
+from pixie.sdk import app, PixieGenerator
 
 # Define input model
 class GenerationConfig(BaseModel):
@@ -286,7 +286,7 @@ async def generate_content(config: GenerationConfig) -> PixieGenerator[str, None
 from typing import Literal
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pixie import app
+from pixie.sdk import app
 
 # Tool result model
 class DatabaseResult(BaseModel):
@@ -351,7 +351,7 @@ async def chat(initial):  # Missing type hints
 Import all necessary types from `pixie`:
 
 ```python
-from pixie import app, PixieGenerator, UserInputRequirement
+from pixie.sdk import app, PixieGenerator, UserInputRequirement
 ```
 
 ### 4. Handle User Input Type Safety
@@ -493,7 +493,7 @@ PixieGenerator[YieldType, SendType]
 ### Issue: Import errors
 
 - **Solution**: Ensure `pixie-sdk` is installed and available
-- **Solution**: Check imports: `from pixie import app, PixieGenerator, UserInputRequirement`
+- **Solution**: Check imports: `from pixie.sdk import app, PixieGenerator, UserInputRequirement`
 
 ## Testing Your Application
 
@@ -540,6 +540,6 @@ When creating a Pixie application, ensure:
 - [ ] Return type is properly annotated (`str`, `BaseModel`, or `PixieGenerator[YieldType, SendType]`)
 - [ ] `Agent.instrument_all()` is called at the start
 - [ ] `UserInputRequirement` type matches generator's `SendType`
-- [ ] All imports are correct (`from pixie import ...`)
+- [ ] All imports are correct (`from pixie.sdk import ...`)
 - [ ] Function has descriptive docstring
 - [ ] Code follows async/await patterns correctly

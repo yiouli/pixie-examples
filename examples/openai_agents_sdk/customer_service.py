@@ -26,7 +26,7 @@ from agents import (
     function_tool,
     handoff,
 )
-import pixie
+import pixie.sdk as pixie
 
 
 faq_agent_prompt = pixie.create_prompt(

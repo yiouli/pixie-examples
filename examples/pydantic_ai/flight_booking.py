@@ -16,7 +16,7 @@ from pydantic_ai import (
     RunUsage,
     UsageLimits,
 )
-import pixie
+import pixie.sdk as pixie
 
 
 flight_search_agent_prompt = pixie.create_prompt(

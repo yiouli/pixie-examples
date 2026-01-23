@@ -1,0 +1,7 @@
+{
+  "defaultVersionId": "v2",
+  "variablesSchema": {
+    "type": "object",
+    "properties": {}
+  }
+}

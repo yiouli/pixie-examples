@@ -20,7 +20,7 @@ from langfuse.langchain import CallbackHandler
 from langchain_core.messages import (
     SystemMessage,
 )
-import pixie
+import pixie.sdk as pixie
 
 
 langfuse_handler = CallbackHandler()
@@ -93,11 +93,11 @@ def provide_solution(solution: str) -> str:
     return f"Solution provided: {solution}"
 
 
-class IssueClassifierPromptVariables(pixie.PromptVariables):
+class IssueClassifierVariables(pixie.Variables):
     warranty_status: Literal["in_warranty", "out_of_warranty"]
 
 
-class ResolutionSpecialistPromptVariables(IssueClassifierPromptVariables):
+class ResolutionSpecialistVariables(IssueClassifierVariables):
     issue_type: Literal["hardware", "software"]
 
 
@@ -107,12 +107,12 @@ warranty_collector_prompt = pixie.create_prompt(
 )
 issue_classifier_prompt = pixie.create_prompt(
     "issue_classifier_agent",
-    IssueClassifierPromptVariables,
+    IssueClassifierVariables,
     description="Customer support agent that classifies technical issues as hardware or software",
 )
 resolution_specialist_prompt = pixie.create_prompt(
     "resolution_specialist_agent",
-    ResolutionSpecialistPromptVariables,
+    ResolutionSpecialistVariables,
     description="Customer support agent that provides resolutions based on issue type and warranty status",
 )
 # Step configuration

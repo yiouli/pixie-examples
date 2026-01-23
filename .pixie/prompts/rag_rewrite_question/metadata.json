@@ -1,0 +1,16 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "question": {
+        "title": "Question",
+        "type": "string"
+      }
+    },
+    "required": [
+      "question"
+    ],
+    "title": "RewriteVariables",
+    "type": "object"
+  }
+}

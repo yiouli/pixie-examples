@@ -1,6 +1,6 @@
 from pydantic_ai import Agent
 
-import pixie
+import pixie.sdk as pixie
 
 
 prompt = pixie.create_prompt(

@@ -1,0 +1,21 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "context": {
+        "title": "Context",
+        "type": "string"
+      },
+      "question": {
+        "title": "Question",
+        "type": "string"
+      }
+    },
+    "required": [
+      "context",
+      "question"
+    ],
+    "title": "GradeVariables",
+    "type": "object"
+  }
+}

@@ -10,10 +10,10 @@ from typing import Annotated, TypeAlias
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, ModelRetry, RunContext, format_as_xml
-import pixie
+import pixie.sdk as pixie
 
 
-class SqlGenPromptVariables(pixie.PromptVariables):
+class SqlGenVariables(pixie.Variables):
     db_schema: str
     today_date: str
     sql_examples: str
@@ -21,7 +21,7 @@ class SqlGenPromptVariables(pixie.PromptVariables):
 
 sql_gen_agent_prompt = pixie.create_prompt(
     "sql_gen_agent",
-    SqlGenPromptVariables,
+    SqlGenVariables,
     description="Generates SQL queries from natural language for PostgreSQL databases",
 )
 
@@ -102,7 +102,7 @@ agent = Agent[Deps, Response](
 @agent.system_prompt
 async def system_prompt() -> str:
     return sql_gen_agent_prompt.compile(
-        SqlGenPromptVariables(
+        SqlGenVariables(
             db_schema=DB_SCHEMA,
             today_date=str(date.today()),
             sql_examples=format_as_xml(SQL_EXAMPLES),

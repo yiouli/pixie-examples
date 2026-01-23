@@ -19,21 +19,21 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import InMemorySaver
 
 from langfuse.langchain import CallbackHandler
-import pixie
+import pixie.sdk as pixie
 
 
-class LanggraphSqlPromptVariables(pixie.PromptVariables):
+class LanggraphSqlVariables(pixie.Variables):
     dialect: str
 
 
 langgraph_sql_generate_prompt = pixie.create_prompt(
     "langgraph_sql_generate_query",
-    LanggraphSqlPromptVariables,
+    LanggraphSqlVariables,
     description="Generates SQL queries from natural language questions",
 )
 langgraph_sql_check_prompt = pixie.create_prompt(
     "langgraph_sql_check_query",
-    LanggraphSqlPromptVariables,
+    LanggraphSqlVariables,
     description="Reviews and validates SQL queries for common mistakes",
 )
 
@@ -101,7 +101,7 @@ def create_sql_graph(db: SQLDatabase, model):
     # Node: Generate query
     def generate_query(state: MessagesState):
         generate_query_prompt_text = langgraph_sql_generate_prompt.compile(
-            LanggraphSqlPromptVariables(dialect=db.dialect)
+            LanggraphSqlVariables(dialect=db.dialect)
         )
         system_message = {"role": "system", "content": generate_query_prompt_text}
         llm_with_tools = model.bind_tools([run_query_tool])
@@ -116,7 +116,7 @@ def create_sql_graph(db: SQLDatabase, model):
         from langchain.messages import AIMessage as AI
 
         check_query_prompt_text = langgraph_sql_check_prompt.compile(
-            LanggraphSqlPromptVariables(dialect=db.dialect)
+            LanggraphSqlVariables(dialect=db.dialect)
         )
         system_message = {"role": "system", "content": check_query_prompt_text}
         last_message = state["messages"][-1]

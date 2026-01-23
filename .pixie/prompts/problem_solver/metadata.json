@@ -1,0 +1,17 @@
+{
+  "defaultVersionId": "v1",
+  "variablesSchema": {
+    "properties": {
+      "problem_description": {
+        "description": "A description of the problem to be solved.",
+        "title": "Problem Description",
+        "type": "string"
+      }
+    },
+    "required": [
+      "problem_description"
+    ],
+    "title": "Variables",
+    "type": "object"
+  }
+}

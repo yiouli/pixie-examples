@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from openai.types.responses import ResponseContentPartDoneEvent, ResponseTextDeltaEvent
 from agents import Agent, RawResponsesStreamEvent, Runner, TResponseInputItem
-import pixie
+import pixie.sdk as pixie
 
 
 french_agent_prompt = pixie.create_prompt(

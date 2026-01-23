@@ -1,0 +1,21 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "dialect": {
+        "title": "Dialect",
+        "type": "string"
+      },
+      "top_k": {
+        "title": "Top K",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "dialect",
+      "top_k"
+    ],
+    "title": "SqlAgentVariables",
+    "type": "object"
+  }
+}

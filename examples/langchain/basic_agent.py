@@ -9,7 +9,7 @@ from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 
 from langfuse.langchain import CallbackHandler
-import pixie
+import pixie.sdk as pixie
 
 
 basic_weather_agent_prompt = pixie.create_prompt(

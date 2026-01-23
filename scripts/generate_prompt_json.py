@@ -7,7 +7,7 @@ import traceback
 
 import openai
 
-from pixie import initialize_prompt_storage, StorageBackedPrompt
+from pixie.prompts.storage import initialize_prompt_storage, StorageBackedPrompt
 from scripts.prompts import prompts
 
 

@@ -1,0 +1,20 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "warranty_status": {
+        "enum": [
+          "in_warranty",
+          "out_of_warranty"
+        ],
+        "title": "Warranty Status",
+        "type": "string"
+      }
+    },
+    "required": [
+      "warranty_status"
+    ],
+    "title": "IssueClassifierVariables",
+    "type": "object"
+  }
+}

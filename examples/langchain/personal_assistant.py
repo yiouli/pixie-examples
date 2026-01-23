@@ -13,7 +13,7 @@ from langchain.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 
 from langfuse.langchain import CallbackHandler
-import pixie
+import pixie.sdk as pixie
 
 
 calendar_agent_prompt = pixie.create_prompt(

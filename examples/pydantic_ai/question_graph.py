@@ -13,7 +13,7 @@ from pydantic_graph import (
     Graph,
     GraphRunContext,
 )
-import pixie
+import pixie.sdk as pixie
 
 
 class EvaluationOutput(BaseModel, use_attribute_docstrings=True):

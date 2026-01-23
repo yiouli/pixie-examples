@@ -23,7 +23,7 @@ import sqlite3
 from dataclasses import dataclass
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-import pixie
+import pixie.sdk as pixie
 
 
 bank_support_agent_prompt = pixie.create_prompt(

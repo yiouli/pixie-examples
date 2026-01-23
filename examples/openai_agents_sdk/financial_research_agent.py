@@ -22,7 +22,7 @@ from collections.abc import Sequence
 
 from pydantic import BaseModel
 from agents import Agent, Runner, RunResult, RunResultStreaming, WebSearchTool
-import pixie
+import pixie.sdk as pixie
 
 
 financial_planner_prompt = pixie.create_prompt(

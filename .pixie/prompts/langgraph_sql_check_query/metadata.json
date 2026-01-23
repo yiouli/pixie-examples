@@ -1,0 +1,16 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "dialect": {
+        "title": "Dialect",
+        "type": "string"
+      }
+    },
+    "required": [
+      "dialect"
+    ],
+    "title": "LanggraphSqlVariables",
+    "type": "object"
+  }
+}

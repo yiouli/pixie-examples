@@ -20,7 +20,7 @@ Then query via GraphQL:
 import os
 from pydantic import BaseModel
 from pydantic_ai import Agent
-import pixie
+import pixie.sdk as pixie
 
 
 class MyModel(BaseModel):

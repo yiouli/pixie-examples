@@ -6,7 +6,7 @@ from typing import Any
 from httpx import AsyncClient
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-import pixie
+import pixie.sdk as pixie
 
 
 @dataclass

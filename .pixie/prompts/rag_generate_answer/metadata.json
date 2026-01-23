@@ -1,0 +1,21 @@
+{
+  "defaultVersionId": "v0",
+  "variablesSchema": {
+    "properties": {
+      "question": {
+        "title": "Question",
+        "type": "string"
+      },
+      "context": {
+        "title": "Context",
+        "type": "string"
+      }
+    },
+    "required": [
+      "question",
+      "context"
+    ],
+    "title": "GenerateVariables",
+    "type": "object"
+  }
+}

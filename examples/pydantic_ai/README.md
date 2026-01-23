@@ -231,7 +231,7 @@ subscription {
 All examples use:
 
 ```python
-from pixie import app, PixieGenerator, UserInputRequirement
+from pixie.sdk import app, PixieGenerator, UserInputRequirement
 
 @app
 async def my_handler(input: InputType) -> OutputType:

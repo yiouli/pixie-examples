@@ -22,18 +22,18 @@ from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
 
 from langfuse.langchain import CallbackHandler
-import pixie
+import pixie.sdk as pixie
 from ..sql_utils import SQLDatabase, SQLDatabaseToolkit
 
 
-class SqlAgentPromptVariables(pixie.PromptVariables):
+class SqlAgentVariables(pixie.Variables):
     dialect: str
     top_k: int
 
 
 sql_agent_prompt = pixie.create_prompt(
     "langchain_sql_agent",
-    SqlAgentPromptVariables,
+    SqlAgentVariables,
     description="SQL agent that interacts with databases and creates queries based on natural language",
 )
 
@@ -86,7 +86,7 @@ async def langchain_sql_query_agent(question: str) -> str:
 
     # Format system prompt with database info
     system_prompt = sql_agent_prompt.compile(
-        SqlAgentPromptVariables(dialect=db.dialect, top_k=5)
+        SqlAgentVariables(dialect=db.dialect, top_k=5)
     )
 
     # Create agent
@@ -123,7 +123,7 @@ async def langchain_interactive_sql_agent() -> pixie.PixieGenerator[str, str]:
 
     # Format system prompt
     system_prompt = sql_agent_prompt.compile(
-        SqlAgentPromptVariables(dialect=db.dialect, top_k=5)
+        SqlAgentVariables(dialect=db.dialect, top_k=5)
     )
 
     # Create agent with checkpointer for conversation memory

@@ -23,38 +23,38 @@ from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from langfuse.langchain import CallbackHandler
-import pixie
+import pixie.sdk as pixie
 import requests
 from bs4 import BeautifulSoup
 
 
-class GradePromptVariables(pixie.PromptVariables):
+class GradeVariables(pixie.Variables):
     context: str
     question: str
 
 
-class RewritePromptVariables(pixie.PromptVariables):
+class RewriteVariables(pixie.Variables):
     question: str
 
 
-class GeneratePromptVariables(pixie.PromptVariables):
+class GenerateVariables(pixie.Variables):
     question: str
     context: str
 
 
 rag_grade_prompt = pixie.create_prompt(
     "rag_grade_documents",
-    GradePromptVariables,
+    GradeVariables,
     description="Grades relevance of retrieved documents to user questions",
 )
 rag_rewrite_prompt = pixie.create_prompt(
     "rag_rewrite_question",
-    RewritePromptVariables,
+    RewriteVariables,
     description="Rewrites questions to improve semantic understanding",
 )
 rag_generate_prompt = pixie.create_prompt(
     "rag_generate_answer",
-    GeneratePromptVariables,
+    GenerateVariables,
     description="Generates concise answers from retrieved context",
 )
 
@@ -143,7 +143,7 @@ def create_rag_graph(retriever, model):
         context = cast(str, state["messages"][-1].content)
 
         prompt = rag_grade_prompt.compile(
-            GradePromptVariables(question=question, context=context)
+            GradeVariables(question=question, context=context)
         )
         response = grader_model.with_structured_output(GradeDocuments).invoke(
             [{"role": "user", "content": prompt}],
@@ -161,7 +161,7 @@ def create_rag_graph(retriever, model):
         """Rewrite the original user question."""
         messages = state["messages"]
         question = cast(str, messages[0].content)
-        prompt = rag_rewrite_prompt.compile(RewritePromptVariables(question=question))
+        prompt = rag_rewrite_prompt.compile(RewriteVariables(question=question))
         response = model.invoke(
             [{"role": "user", "content": prompt}],
             config={"callbacks": [langfuse_handler]},
@@ -174,7 +174,7 @@ def create_rag_graph(retriever, model):
         question = cast(str, state["messages"][0].content)
         context = cast(str, state["messages"][-1].content)
         prompt = rag_generate_prompt.compile(
-            GeneratePromptVariables(question=question, context=context)
+            GenerateVariables(question=question, context=context)
         )
         response = model.invoke(
             [{"role": "user", "content": prompt}],
