@@ -2100,14 +2100,14 @@ files = [
 
 [[package]]
 name = "pixie-prompts"
-version = "0.1.1"
+version = "0.1.2"
 description = "Code-first, type-safe prompt management"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "pixie_prompts-0.1.1-py3-none-any.whl", hash = "sha256:c94d807b8c9514e29ee92ad23cd5e48f4d2130fae784fa6ef6a5c242013833c6"},
-    {file = "pixie_prompts-0.1.1.tar.gz", hash = "sha256:966ea25a6308fa110c86a402bab9d2f4d0b47a4181e1a596ef98c20964f62513"},
+    {file = "pixie_prompts-0.1.2-py3-none-any.whl", hash = "sha256:e502bb6d1a4f5beadcd44de7a7e4c0bd623886d9319db26c2960170af4876355"},
+    {file = "pixie_prompts-0.1.2.tar.gz", hash = "sha256:1337c3b26a69389cee2ad9705407827511befcb0df7401b2831719f501690467"},
 ]
 
 [package.dependencies]
@@ -2117,23 +2117,24 @@ fastapi = {version = ">=0.128.0", optional = true, markers = "extra == \"server\
 jinja2 = ">=3.1.6,<4.0.0"
 jsonsubschema = ">=0.0.7,<0.0.8"
 pydantic = ">=2.12.5,<3.0.0"
+pydantic-ai-slim = {version = ">=1.39.0", optional = true, markers = "extra == \"server\""}
 strawberry-graphql = {version = ">=0.288.1", optional = true, markers = "extra == \"server\""}
 uvicorn = {version = ">=0.40.0", optional = true, markers = "extra == \"server\""}
 watchdog = {version = ">=6.0.0", optional = true, markers = "extra == \"server\""}
 
 [package.extras]
-server = ["colorlog (>=6.10.1)", "dotenv (>=0.9.9)", "fastapi (>=0.128.0)", "strawberry-graphql (>=0.288.1)", "uvicorn (>=0.40.0)", "watchdog (>=6.0.0)"]
+server = ["colorlog (>=6.10.1)", "dotenv (>=0.9.9)", "fastapi (>=0.128.0)", "pydantic-ai-slim (>=1.39.0)", "strawberry-graphql (>=0.288.1)", "uvicorn (>=0.40.0)", "watchdog (>=6.0.0)"]
 
 [[package]]
 name = "pixie-sdk"
-version = "0.2.3"
+version = "0.2.4"
 description = "Interactive debugging tool for AI applications"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "pixie_sdk-0.2.3-py3-none-any.whl", hash = "sha256:8d6592b9a04112974ad18cf7bacf12ee4d41983b798876bc262a6ebb4a03435f"},
-    {file = "pixie_sdk-0.2.3.tar.gz", hash = "sha256:e9b58ce668ee6b2fe3285a29c4cd9766164113dc9b5c5ddc353a17daeae9dcb8"},
+    {file = "pixie_sdk-0.2.4-py3-none-any.whl", hash = "sha256:f591499b48d2286510fa7d87c78dd5ec7a55ecda22044b0951e6c828e2ef9f2a"},
+    {file = "pixie_sdk-0.2.4.tar.gz", hash = "sha256:c01f933d74684d1b618344ea3dbe52e007f959551aba6eedace6abc8b72e3068"},
 ]
 
 [package.dependencies]
@@ -2148,7 +2149,7 @@ opentelemetry-api = ">=1.33.1,<2.0.0"
 opentelemetry-exporter-otlp-proto-http = ">=1.33.1,<2.0.0"
 opentelemetry-sdk = ">=1.33.1,<2.0.0"
 packaging = ">=23.2,<26.0"
-pixie-prompts = {version = ">=0.1.1,<0.2.0", extras = ["server"]}
+pixie-prompts = {version = ">=0.1.2", extras = ["server"]}
 pydantic = ">=1.10.7,<3.0"
 requests = ">=2,<3"
 strawberry-graphql = ">=0.288.1"
@@ -4161,4 +4162,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "cd54f86abc386983ff28f93cf8348b549dbb3025790df1218e4876e66d3f7a53"
+content-hash = "9b0165e77108c1618e50a433e25e76a277669e35d92860e179917f3e3696b737"
