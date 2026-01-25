@@ -1,0 +1,84 @@
+name: Sync pixie-sdk Version
+
+on:
+  schedule:
+    # Align with daily release cadence (5am PST / 13:00 UTC)
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Determine latest pixie-sdk and current package version
+        id: versions
+        env:
+          BASE_PACKAGE: pixie-sdk
+        run: |
+          set -euo pipefail
+          LATEST=$(curl -s https://pypi.org/pypi/${BASE_PACKAGE}/json | jq -r '.info.version')
+          export LATEST
+
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+          from packaging.version import Version
+
+          latest = os.environ["LATEST"]
+          data = tomllib.loads(Path("pyproject.toml").read_text())
+          current = data["tool"]["poetry"]["version"]
+
+          update = Version(latest) > Version(current)
+
+          output = Path(os.environ["GITHUB_OUTPUT"])
+            output.write_text(
+              f"latest={latest}\ncurrent={current}\nupdate={'true' if update else 'false'}\n",
+              encoding="utf-8",
+            )
+          PY
+
+      - name: Log versions (no update needed)
+        if: steps.versions.outputs.update != 'true'
+        run: echo "No update required. Current version ${{ steps.versions.outputs.current }} is up to date with pixie-sdk ${{ steps.versions.outputs.latest }}."
+
+      - name: Align package and dependency versions
+        if: steps.versions.outputs.update == 'true'
+        run: |
+          set -euo pipefail
+          poetry version "${{ steps.versions.outputs.latest }}"
+          poetry add "pixie-sdk==${{ steps.versions.outputs.latest }}"
+
+      - name: Commit changes
+        if: steps.versions.outputs.update == 'true'
+        run: |
+          if git diff --quiet; then
+            echo "No file changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml poetry.lock || true
+          git commit -m "chore: sync to pixie-sdk v${{ steps.versions.outputs.latest }}"
+          git push
