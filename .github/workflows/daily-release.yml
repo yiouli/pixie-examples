@@ -1,4 +1,4 @@
-name: Weekly Release and Publish
+name: Daily Release and Publish
 on:
   schedule:
     # Run at 5am PST (13pm UTC) every week
