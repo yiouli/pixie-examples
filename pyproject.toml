@@ -4,7 +4,7 @@ packages = [
     { include = "examples" }
 ]
 
-version = "0.2.5"
+version = "0.2.9"
 description = "examples for using Pixie"
 authors = ["Yiou Li <yol@gopixie.ai>"]
 license = "MIT"
@@ -21,7 +21,7 @@ Changelog = "https://github.com/yiouli/pixie-examples/commits/main/"
 python = ">=3.11,<3.14"
 pydantic-ai-slim = "^1.39.0"
 pydantic = {version = "^2.7.4", extras = []}
-pixie-sdk = "^0.2.6"
+pixie-sdk = "0.2.9"
 openai-agents = "^0.6.5"
 pymarkdownlnt = "^0.9.34"
 langchain = "^1.2.3"
