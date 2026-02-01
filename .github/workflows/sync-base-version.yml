@@ -30,7 +30,7 @@ jobs:
           version: latest
           virtualenvs-create: true
           virtualenvs-in-project: true
-      
+
       - name: Install Dependencies for Script
         run: pip install packaging
 
@@ -85,3 +85,10 @@ jobs:
           git add pyproject.toml poetry.lock || true
           git commit -m "chore: sync to pixie-sdk v${{ steps.versions.outputs.latest }}"
           git push
+
+      - name: Trigger publish workflow
+        if: steps.versions.outputs.update == 'true'
+        run: |
+          gh workflow run version-bump-release.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
