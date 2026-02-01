@@ -15,8 +15,7 @@ openai.api_key = "sk-your-api-key"
 
 
 async def main():
-    dir = os.path.join("pixie1/prompts")
-    initialize_prompt_storage(dir)
+    initialize_prompt_storage()
     print(f"Initialized prompt storage at: {dir}")
 
     import importlib.util
