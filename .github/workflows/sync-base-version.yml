@@ -53,10 +53,10 @@ jobs:
           update = Version(latest) > Version(current)
 
           output = Path(os.environ["GITHUB_OUTPUT"])
-            output.write_text(
-              f"latest={latest}\ncurrent={current}\nupdate={'true' if update else 'false'}\n",
-              encoding="utf-8",
-            )
+          output.write_text(
+            f"latest={latest}\ncurrent={current}\nupdate={'true' if update else 'false'}\n",
+            encoding="utf-8",
+          )
           PY
 
       - name: Log versions (no update needed)
