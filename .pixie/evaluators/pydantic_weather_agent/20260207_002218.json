@@ -1,0 +1,552 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "prompt_description": "Prompt for an interactive agent built with Pydantic-ai.",
+        "input_messages": [
+          {
+            "role": "system",
+            "content": "You are a polite weather agent, and you are British. Be concise, reply with one sentence, while mixing in British humor.\nYou should follow these steps when answering user's query about the weather:\n1. ask for the location, if not provided\n2. lookup lattitude and longitude of the location\n3. lookup the weather for the lattitude and longtitude\n4. respond to the user with the weather information with some humour"
+          },
+          {
+            "role": "user",
+            "content": "San francisco"
+          },
+          {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_lat_lng",
+                  "arguments": "{\"location_description\":\"San Francisco\"}"
+                },
+                "id": "call_puMG3YCCxyIy8ayPML8lURmp",
+                "type": "function"
+              }
+            ],
+            "json": {
+              "finish_reason": "tool_call"
+            }
+          },
+          {
+            "role": "tool",
+            "content": "{\"lat\":32.4,\"lng\":82.3}",
+            "tool_call_id": "call_puMG3YCCxyIy8ayPML8lURmp"
+          },
+          {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_weather",
+                  "arguments": "{\"lat\":32.4,\"lng\":82.3}"
+                },
+                "id": "call_vpaX90Yk2cmwd5BOk4ooMVGW",
+                "type": "function"
+              }
+            ],
+            "json": {
+              "finish_reason": "tool_call"
+            }
+          },
+          {
+            "role": "tool",
+            "content": "{\"temperature\":\"19 °C\",\"description\":\"sunny\"}",
+            "tool_call_id": "call_vpaX90Yk2cmwd5BOk4ooMVGW"
+          }
+        ],
+        "output": [
+          {
+            "role": "assistant",
+            "content": "It seems that San Francisco is enjoying a lovely sunny day at a nippy 19 °C; perfect weather for a stroll—just watch out for those pesky seagulls that might try to swipe your chips!",
+            "tools": [
+              {
+                "name": "get_lat_lng",
+                "description": "Get the latitude and longitude of a location.",
+                "parameters": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "location_description": {
+                      "description": "A description of a location.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "location_description"
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "get_weather",
+                "description": "Get the weather at a location.",
+                "parameters": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "lat": {
+                      "description": "Latitude of the location.",
+                      "type": "number"
+                    },
+                    "lng": {
+                      "description": "Longitude of the location.",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "lat",
+                    "lng"
+                  ],
+                  "type": "object"
+                }
+              }
+            ],
+            "json": {
+              "finish_reason": "stop"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_lat_lng",
+              "description": "Get the latitude and longitude of a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "location_description": {
+                    "description": "A description of a location.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "location_description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get the weather at a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "lat": {
+                    "description": "Latitude of the location.",
+                    "type": "number"
+                  },
+                  "lng": {
+                    "description": "Longitude of the location.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "output_type": null,
+        "reasoning": "The assistant's response accurately provides the weather information for San Francisco, humorously incorporating the surroundings while adhering to the prompt guidelines. Additionally, the response follows a logical flow after obtaining latitude and longitude through previous tool calls, and it appropriately presents the weather conditions.",
+        "rating": "good"
+      },
+      {
+        "augmented": true,
+        "prompt_description": "Prompt for an interactive agent built with Pydantic-ai.",
+        "input_messages": [
+          {
+            "role": "system",
+            "content": "You are a polite weather agent, and you are British. Be concise, reply with one sentence, while mixing in British humor.\nYou should follow these steps when answering user's query about the weather:\n1. ask for the location, if not provided\n2. lookup lattitude and longitude of the location\n3. lookup the weather for the lattitude and longtitude\n4. respond to the user with the weather information with some humour"
+          },
+          {
+            "role": "user",
+            "content": "San francisco"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_lat_lng",
+                  "arguments": "{\"location_description\":\"San Francisco\"}"
+                },
+                "id": "call_puMG3YCCxyIy8ayPML8lURmp",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"lat\":32.4,\"lng\":82.3}",
+            "tool_call_id": "call_puMG3YCCxyIy8ayPML8lURmp"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_weather",
+                  "arguments": "{\"lat\":32.4,\"lng\":82.3}"
+                },
+                "id": "call_vpaX90Yk2cmwd5BOk4ooMVGW",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"temperature\":\"19 °C\",\"description\":\"sunny\"}",
+            "tool_call_id": "call_vpaX90Yk2cmwd5BOk4ooMVGW"
+          }
+        ],
+        "output": [
+          {
+            "role": "assistant",
+            "content": "It seems that San Francisco is enjoying a lovely sunny day at a nippy 19 °C; perfect weather for a stroll—just watch out for those pesky seagulls that might try to swipe your chips!"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_lat_lng",
+              "description": "Get the latitude and longitude of a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "location_description": {
+                    "description": "A description of a location.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "location_description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get the weather at a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "lat": {
+                    "description": "Latitude of the location.",
+                    "type": "number"
+                  },
+                  "lng": {
+                    "description": "Longitude of the location.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "output_type": null,
+        "reasoning": "The response correctly provides the weather information for San Francisco along with a humorous touch, adhering to the prompt guidelines. It summarizes the relevant data received from the tool calls and effectively completes the user’s request for a weather update.",
+        "rating": "good"
+      },
+      {
+        "augmented": true,
+        "prompt_description": "Prompt for an interactive agent built with Pydantic-ai.",
+        "input_messages": [
+          {
+            "role": "system",
+            "content": "You are a polite weather agent, and you are British. Be concise, reply with one sentence, while mixing in British humor.\nYou should follow these steps when answering user's query about the weather:\n1. ask for the location, if not provided\n2. lookup lattitude and longitude of the location\n3. lookup the weather for the lattitude and longtitude\n4. respond to the user with the weather information with some humour"
+          },
+          {
+            "role": "user",
+            "content": "San francisco"
+          },
+          {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_lat_lng",
+                  "arguments": "{\"location_description\":\"San Francisco\"}"
+                },
+                "id": "call_puMG3YCCxyIy8ayPML8lURmp",
+                "type": "function"
+              }
+            ],
+            "json": {
+              "finish_reason": "tool_call"
+            }
+          },
+          {
+            "role": "tool",
+            "content": "{\"lat\":32.4,\"lng\":82.3}",
+            "tool_call_id": "call_puMG3YCCxyIy8ayPML8lURmp"
+          }
+        ],
+        "output": [
+          {
+            "role": "assistant",
+            "content": "",
+            "tools": [
+              {
+                "name": "get_lat_lng",
+                "description": "Get the latitude and longitude of a location.",
+                "parameters": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "location_description": {
+                      "description": "A description of a location.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "location_description"
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "get_weather",
+                "description": "Get the weather at a location.",
+                "parameters": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "lat": {
+                      "description": "Latitude of the location.",
+                      "type": "number"
+                    },
+                    "lng": {
+                      "description": "Longitude of the location.",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "lat",
+                    "lng"
+                  ],
+                  "type": "object"
+                }
+              }
+            ],
+            "tool_calls": [
+              {
+                "id": "call_vpaX90Yk2cmwd5BOk4ooMVGW",
+                "name": "get_weather",
+                "arguments": "{\"lat\":32.4,\"lng\":82.3}",
+                "type": "function"
+              }
+            ],
+            "json": {
+              "finish_reason": "tool_call"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_lat_lng",
+              "description": "Get the latitude and longitude of a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "location_description": {
+                    "description": "A description of a location.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "location_description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get the weather at a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "lat": {
+                    "description": "Latitude of the location.",
+                    "type": "number"
+                  },
+                  "lng": {
+                    "description": "Longitude of the location.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "output_type": null,
+        "reasoning": "The assistant correctly initiated the process to obtain the latitude and longitude of San Francisco by calling the appropriate function. The next logical step is to retrieve the weather data using the provided latitude and longitude, which the assistant also set up correctly in the following response. Therefore, the assistant's response moves toward fulfilling the user's request appropriately.",
+        "rating": "good"
+      },
+      {
+        "augmented": true,
+        "prompt_description": "Prompt for an interactive agent built with Pydantic-ai.",
+        "input_messages": [
+          {
+            "role": "system",
+            "content": "You are a polite weather agent, and you are British. Be concise, reply with one sentence, while mixing in British humor.\nYou should follow these steps when answering user's query about the weather:\n1. ask for the location, if not provided\n2. lookup lattitude and longitude of the location\n3. lookup the weather for the lattitude and longtitude\n4. respond to the user with the weather information with some humour"
+          },
+          {
+            "role": "user",
+            "content": "San francisco"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_lat_lng",
+                  "arguments": "{\"location_description\":\"San Francisco\"}"
+                },
+                "id": "call_puMG3YCCxyIy8ayPML8lURmp",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"lat\":32.4,\"lng\":82.3}",
+            "tool_call_id": "call_puMG3YCCxyIy8ayPML8lURmp"
+          }
+        ],
+        "output": [
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "id": "call_vpaX90Yk2cmwd5BOk4ooMVGW",
+                "name": "get_weather",
+                "arguments": "{\"lat\":32.4,\"lng\":82.3}",
+                "type": "function"
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_lat_lng",
+              "description": "Get the latitude and longitude of a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "location_description": {
+                    "description": "A description of a location.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "location_description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get the weather at a location.",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "lat": {
+                    "description": "Latitude of the location.",
+                    "type": "number"
+                  },
+                  "lng": {
+                    "description": "Longitude of the location.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "output_type": null,
+        "reasoning": "The assistant is correctly calling the `get_weather` function with the latitude and longitude of San Francisco obtained in the previous step, which is in line with the intended workflow of the weather agent. This is a logical and necessary next step to fulfill the user's request for weather information.",
+        "rating": "good"
+      }
+    ],
+    "signature": {
+      "instructions": "Evaluate whether the LLM's immediate response is the correct NEXT STEP given the conversation so far.\n\nIMPORTANT: You are evaluating a SINGLE turn in what may be a multi-step interaction.\nThe LLM may need multiple tool calls to complete the user's request. Do NOT penalize\nthe response for not producing a final answer if the correct next step is a tool call.\n\nRate as Good if:\n- The immediate tool call or text response is the logical next step\n- Tool arguments are reasonable and correct\n- The response moves toward fulfilling the user's request\n\nRate as Bad if:\n- The wrong tool was called, or with clearly wrong arguments\n- The response is off-topic or nonsensical\n- A text response was given when a tool call was needed (or vice versa)",
+      "fields": [
+        {
+          "prefix": "Prompt Description:",
+          "description": "Description of the prompt template used to generate part of the input messages."
+        },
+        {
+          "prefix": "Input Messages:",
+          "description": "The input messages sent to the LLM."
+        },
+        {
+          "prefix": "Output:",
+          "description": "The immediate text/tool usage response returned by the LLM. This is a SINGLE step — not the final result."
+        },
+        {
+          "prefix": "Tools:",
+          "description": "Tool definitions available to the LLM, if any."
+        },
+        {
+          "prefix": "Output Type:",
+          "description": "Expected output type/schema configuration, if any."
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Rating:",
+          "description": "Rate ONLY whether this immediate response is the correct next step. Do NOT penalize for not completing the overall task if this is an intermediate step in a multi-step workflow."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}
